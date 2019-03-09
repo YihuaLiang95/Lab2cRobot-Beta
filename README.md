@@ -18,6 +18,6 @@ This repository is just for test</br>
    ssh -T git@github.com
    ```
    If you see "Hi yourname You've successfully authenticated, but GitHub does not provide shell access. ",
-   you are connected to Github now.
+   you are connected to Github now.</br>
 #5. Use ```git clone 'git@github:repositeryname' ``` to clone this repo to your laptop</br>
    You can find relative link which should be in '' by clicking the button "clone or download". </br>
