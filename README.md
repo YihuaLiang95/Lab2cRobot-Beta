@@ -21,3 +21,6 @@ This repository is just for test</br>
    you are connected to Github now.</br>
 #5. Use ```git clone 'git@github:repositeryname' ``` to clone this repo to your laptop</br>
    You can find relative link which should be in '' by clicking the button "clone or download". </br>
+
+#Tip. Usage on git command
+   You can check the ** git-cheatsheet.pdf ** for common git command
