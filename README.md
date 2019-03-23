@@ -15,6 +15,7 @@ This repository is just for test</br>
    I suggest you naming the file that restore the key as "id_rsa"</br>  
    # 4. Try</br>
    ```
+   ssh-add id_rsa # try this if it says 'Permission denied (publickey)'.
    ssh -T git@github.com
    ```
    If you see "Hi yourname You've successfully authenticated, but GitHub does not provide shell access. ",
@@ -52,7 +53,7 @@ This repository is just for test</br>
    # 9. Merge conflicts
    Merge conflicts will appear when git fail to figure out which version of codes you want to save.</br>
    It means codes in repositery is different from what you pull from it.
-   
+
    # Finally, Google or Baidu when things go wrong.
 
    # Tip. Usage on git command
