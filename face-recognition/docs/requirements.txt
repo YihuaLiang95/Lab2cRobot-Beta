@@ -1,0 +1,5 @@
+numpy==1.16.2
+opencv-python==4.0.0.21
+scipy==1.2.1
+sklearn==0.0
+tensorflow-gpu==1.7.0
