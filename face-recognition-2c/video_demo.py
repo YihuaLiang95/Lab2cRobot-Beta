@@ -97,7 +97,10 @@ def main(_):
             ret,frame = video_capture.read()
             # scaled frame
             f_width,f_height = [int(a) for a in FLAGS.video_resolution.split("*")]
-            o_frame = cv2.resize(frame,(f_width,f_height),interpolation=cv2.INTER_CUBIC)
+            try:
+                o_frame = cv2.resize(frame,(f_width,f_height),interpolation=cv2.INTER_CUBIC)
+            except:
+                break
 
             # gray
             if FLAGS.gray:
@@ -117,6 +120,7 @@ def main(_):
                 # detect face
                 det_arr,pts_arr,scores_arr = mtcnn_detector.face_detect(i_frame,
                                                                 pnet,rnet,onet,threshold,FLAGS)
+
                 if len(det_arr) > 0:
                     faces = []
                     for i,det in enumerate(det_arr):
@@ -145,7 +149,7 @@ def main(_):
             f_count += 1
             cv2.imshow("Real-time Output",o_frame)
 
-            if cv2.waitKey(10) & 0xFF == ord("q"):
+            if cv2.waitKey(1) & 0xFF == ord("q"):
                 break
 
         video_capture.release()
