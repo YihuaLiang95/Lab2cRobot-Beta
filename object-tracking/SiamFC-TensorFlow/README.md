@@ -1,5 +1,6 @@
 # SiamFC-TensorFlow
-A TensorFlow implementation of the SiamFC tracker
+A TensorFlow implementation of the SiamFC tracker.  
+- [x] **Modified by Zifeng**. Use `sh demo.sh` to demo on video in **assets/TestFace**, at *28/Mar/2019*.
 
 ## Introduction
 
