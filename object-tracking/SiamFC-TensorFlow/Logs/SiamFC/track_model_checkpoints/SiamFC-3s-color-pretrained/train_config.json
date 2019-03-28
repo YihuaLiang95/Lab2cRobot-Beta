@@ -1,0 +1,42 @@
+{
+  "train_dir": "Logs/SiamFC/track_model_checkpoints/SiamFC-3s-color-pretrained",
+  "lr_config": {
+    "initial_lr": 0.01,
+    "policy": "exponential",
+    "lr_decay_factor": 0.8685113737513527,
+    "staircase": true,
+    "num_epochs_per_decay": 1
+  },
+  "seed": 123,
+  "optimizer_config": {
+    "momentum": 0.9,
+    "optimizer": "MOMENTUM",
+    "use_nesterov": false
+  },
+  "max_checkpoints_to_keep": null,
+  "validation_data_config": {
+    "preprocessing_name": "None",
+    "prefetch_threads": 1,
+    "max_frame_dist": 100,
+    "prefetch_capacity": 120,
+    "batch_size": 8,
+    "input_imdb": "data/validation_imdb.pickle"
+  },
+  "gt_config": {
+    "rNeg": 0,
+    "rPos": 16
+  },
+  "log_every_n_steps": 10,
+  "clip_gradients": null,
+  "train_data_config": {
+    "preprocessing_name": "siamese_fc_color",
+    "prefetch_threads": 4,
+    "epoch": 50,
+    "max_frame_dist": 100,
+    "prefetch_capacity": 120,
+    "batch_size": 8,
+    "num_examples_per_epoch": 53200.0,
+    "input_imdb": "data/train_imdb.pickle"
+  },
+  "save_model_every_n_step": 6650.0
+}

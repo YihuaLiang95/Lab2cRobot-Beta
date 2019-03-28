@@ -1,0 +1,20 @@
+{
+  "adjust_response_config": {
+    "scale": 0.001,
+    "train_bias": true
+  },
+  "embed_config": {
+    "bn_epsilon": 1e-06,
+    "bn_momentum": 0.05,
+    "embedding_checkpoint_file": "assets/2016-08-17.net.mat",
+    "bn_scale": true,
+    "stride": 8,
+    "use_bn": true,
+    "init_method": "kaiming_normal",
+    "weight_decay": 0.0005,
+    "train_embedding": false,
+    "embedding_feature_num": 256,
+    "embedding_name": "convolutional_alexnet"
+  },
+  "z_image_size": 127
+}

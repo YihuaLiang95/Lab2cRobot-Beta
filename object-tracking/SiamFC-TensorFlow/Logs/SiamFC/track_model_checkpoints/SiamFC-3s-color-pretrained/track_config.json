@@ -1,0 +1,13 @@
+{
+  "upsample_method": "bicubic",
+  "log_level": 0,
+  "scale_step": 1.0375,
+  "upsample_factor": 16,
+  "window_influence": 0.176,
+  "log_dir": "Logs/SiamFC/track_model_inference/SiamFC-3s-color-pretrained",
+  "scale_penalty": 0.9745,
+  "include_first": false,
+  "num_scales": 3,
+  "scale_damp": 0.59,
+  "x_image_size": 255
+}
