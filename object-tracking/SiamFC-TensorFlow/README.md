@@ -2,6 +2,10 @@
 A TensorFlow implementation of the SiamFC tracker.  
 - [x] **Modified by Zifeng**. Use `sh demo.sh` to demo on video in **assets/TestFace**, at *28/Mar/2019*.  
 
+  ![](./assets/demo_result.jpg)
+
+
+
 ---
 **The Followings are from the original Repo of [SiamFC-Tensorflow](https://github.com/bilylee/SiamFC-TensorFlow).**
 

@@ -117,7 +117,11 @@ def main(_):
 
             trajectory.append(bbox)
             f_count += 1
+
             cv2.imshow("Real-time Ouput",o_frame)
+            # if f_count > 30:
+            #     cv2.imwrite("test.jpg",o_frame)
+            #     pdb.set_trace()
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 break
 
