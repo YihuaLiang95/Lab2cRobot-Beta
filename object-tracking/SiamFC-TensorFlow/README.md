@@ -1,10 +1,22 @@
 # SiamFC-TensorFlow
 A TensorFlow implementation of the SiamFC tracker.  
-- [x] **Modified by Zifeng**. Use `sh demo.sh` to demo on video in **assets/TestFace**, at *28/Mar/2019*.  
+## Demo 
 
-  ![](./assets/demo_result.jpg)
+Instruction (by @zifeng):
 
+Use `python3 scripts/video_demo.py --video_path=0` to demo on **camera**.
 
+Or 
+
+`python3 scripts/video_demo.py --video_path=assets/TestFace` demo on **video**.
+
+Modified on **28/Mar/2019**.
+
+### Demo Result
+
+![](assets/exemplar.jpg)
+
+![](assets/instance.jpg)
 
 ---
 **The Followings are from the original Repo of [SiamFC-Tensorflow](https://github.com/bilylee/SiamFC-TensorFlow).**

@@ -54,19 +54,24 @@ def main(_):
     with tf.Session(graph=g,config=sess_config) as sess:
         restore_fn(sess)
         tracker = Tracker(model,model_config=model_config,track_config=track_config)
-
         video_name = os.path.basename(FLAGS.video_path)
         video_log_dir = os.path.join(track_config["log_dir"],video_name)
         mkdir_p(video_log_dir)
 
-        first_line = open(FLAGS.video_path + '/groundtruth_rect.txt').readline()
-        bb = [int(v) for v in first_line.strip().split(',')]
-        # Rectangle: [x,y,width,height]
-        init_bb = Rectangle(bb[0] - 1, bb[1] - 1, bb[2], bb[3])  # 0-index in python
-
-        # read from video
-        video_path = glob(os.path.join(FLAGS.video_path,"*.mp4"))[0]
+        if str(FLAGS.video_path) in ["0","1"]:
+            # read from camera
+            video_path = int(FLAGS.video_path)
+            with_camera = True
+        else:
+            # read from video
+            video_path = glob(os.path.join(FLAGS.video_path,"*.mp4"))[0]
+            with_camera = False
+        
         video_capture = cv2.VideoCapture(video_path)
+
+        bb = [-1,-1,-1,-1]
+        cv2.namedWindow("template")
+        cv2.setMouseCallback("template",draw_init_box,bb)
 
         trajectory = []
         f_count = 0
@@ -74,7 +79,9 @@ def main(_):
         start_time = time.time()
         while True:
             # capture frame by frame
-            _,frame = video_capture.read()
+            ret_,frame = video_capture.read()
+            if ret_ == False:
+                continue
             f_width,f_height = [int(a) for a in FLAGS.video_resolution.split("*")]
             try:
                 o_frame = cv2.resize(frame,(f_width,f_height),interpolation=cv2.INTER_CUBIC)
@@ -86,6 +93,21 @@ def main(_):
             # pdb.set_trace()
 
             if f_count == 0: # initialize the tracker
+                # wait for drawing init box
+                while True:
+                    init_frame = o_frame.copy()
+                    cv2.imshow("template",init_frame)
+                    k = cv2.waitKey(0)
+                    if k == 32: # space
+                        cx = int((bb[0] + bb[2]) / 2)
+                        cy = int((bb[1] + bb[3]) / 2)
+                        w = int(bb[2] - bb[0])
+                        h = int(bb[3]- bb[1])
+                        # Rectangle: [x,y,width,height]
+                        init_bb = Rectangle(cx - 1, cy - 1, w, h)  # 0-index in python
+                        draw_box(init_frame,init_bb,"exemplar")
+                        break
+
                 first_box = convert_bbox_format(init_bb,"center-based")
                 bbox_feed = [first_box.y,first_box.x,first_box.height,first_box.width]
                 input_feed = [i_frame,bbox_feed]
@@ -119,11 +141,15 @@ def main(_):
             f_count += 1
 
             cv2.imshow("Real-time Ouput",o_frame)
+            cv2.imshow("template",init_frame)
             # if f_count > 30:
             #     cv2.imwrite("test.jpg",o_frame)
             #     pdb.set_trace()
             if cv2.waitKey(1) & 0xFF == ord("q"):
+                cv2.imwrite("./assets/instance.jpg",o_frame)
+                cv2.imwrite("./assets/exemplar.jpg",init_frame)
                 break
+
 
         video_capture.release()
         cv2.destroyAllWindows()
@@ -136,15 +162,26 @@ def main(_):
                         region.width,region.height)
                 f.write(rect_str)
 
-def draw_box(frame,box):
+def draw_box(frame,box,name="object"):
         # box = box.astype(int)
-        print(box)
+        print("cx:{:.0f},cy:{:.0f},width:{:.0f},height:{:.0f}".format(box.x,box.y,box.width,box.height))
         x1,y1 = int(box.x - box.width/2),int(box.y - box.height/2)
         x2,y2 = int(box.x+box.width/2), int(box.y + box.height/2)
         cv2.rectangle(frame,(x1,y1),(x2,y2),(0,977,255),2)
-        cv2.putText(frame,"object",(x1,y1),
+        cv2.putText(frame,name,(x1,y1),
             cv2.FONT_HERSHEY_SIMPLEX,
             1,(0,255,0),2)
+
+def draw_init_box(event,x,y,flags,param):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        print("Click on {},{}".format(x,y))
+        param[0],param[1] = x,y
+
+    elif event == cv2.EVENT_LBUTTONUP:
+        ix,iy,_,_ = param
+        param[2],param[3] = x,y
+        print("Draw bbox on {}".format(param))
+
 
 if __name__ == '__main__':
     tf.app.run()
