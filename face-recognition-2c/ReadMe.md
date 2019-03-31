@@ -1,4 +1,4 @@
-# Real-time Face Detection and Verification #
+# Real-time Face Detection and Verification with One-shot Learning #
 
 [TOC]
 
