@@ -1,4 +1,4 @@
-# Real-time Face Detection and Verification with One-shot Learning #
+# Real-time Face Detection and Verification #
 
 [TOC]
 
@@ -99,5 +99,3 @@ Run `python demo.py --image_path=./demo/1.jpg --emb_path=./data/face_emb.npy`
 
   python `video_demo.py --video_path=test.mp4 --emb_path=./data/face_emb.npy`
 
-## TODO ##
-Robust embeddings extraction regardless of face images brightness.
