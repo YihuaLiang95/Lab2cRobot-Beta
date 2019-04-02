@@ -1,0 +1,21 @@
+<launch>
+  <!-- startup move_base node -->
+  <include file="$(find rikirobot)/launch/lidar/$(env RIKILIDAR).launch" />
+  <arg name="map_file" default="$(find rikirobot)/maps/house.yaml"/>
+  <node pkg="map_server" name="map_server"  type="map_server" args="$(arg map_file)" /> 
+ 
+  <!-- startup amcl node -->
+  <include file="$(find rikirobot)/launch/amcl.launch" />
+  <include file="$(find rikirobot)/param/navigation/move_base.xml" />
+  
+  <!-- startup patrol navigation node -->
+  <node pkg="rikirobot" type="riki_patrol_nav.py" name="riki_patrol_nav_node" output="screen" >
+    <param name="rest_time"     value="5" />
+    <param name="keep_patrol"   value="true" />
+    <param name="random_patrol" value="false" />
+    <param name="patrol_type"   value="0" />
+    <param name="patrol_loop"   value="1" />
+    <param name="patrol_time"   value="3" />
+  </node>
+ 
+</launch>
