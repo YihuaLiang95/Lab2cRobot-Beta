@@ -36,12 +36,10 @@ tf.app.flags.DEFINE_float("match_threshold",0.5,
 
 tf.app.flags.DEFINE_boolean("with_gpu",False,
     "Set as `True` will make use of GPU for detection.")
-tf.app.flags.DEFINE_boolean("gray",True,
-    "Set as `True` will gray frame for faster detection.")
 tf.app.flags.DEFINE_boolean("detect_multiple_faces",True,
     "Set as `False` will only detect one face one frame.")
 
-tf.app.flags.DEFINE_float("gpu_memory_fraction",0.1,
+tf.app.flags.DEFINE_float("gpu_memory_fraction",0.5,
     "Upper bound on the amount of GPU memory that will be used by the process.")
 tf.app.flags.DEFINE_integer("frame_interval",2,
     "Doing detection per number of frames")
@@ -102,12 +100,7 @@ def main(_):
             except:
                 break
 
-            # gray
-            if FLAGS.gray:
-                gray_frame = cv2.cvtColor(o_frame,cv2.COLOR_BGR2GRAY)
-                i_frame = cv2.cvtColor(gray_frame,cv2.COLOR_GRAY2BGR)
-            else:
-                i_frame = o_frame
+            i_frame = cv2.cvtColor(o_frame,cv2.COLOR_BGR2RGB)
 
             if f_count % FLAGS.frame_interval == 0:
                 # check current FPS                
@@ -125,11 +118,10 @@ def main(_):
                     faces = []
                     for i,det in enumerate(det_arr):
                         # get aligned faces as input
-                        face = mtcnn_detector.align_face(o_frame,det,FLAGS)
+                        face = mtcnn_detector.align_face(i_frame,det,FLAGS)
                         # resize, as input for pretrained Inception-ResNet-V1
                         face = misc.imresize(face,(160,160),interp="bilinear")
-                        # BGR2RGB
-                        faces.append(cv2.cvtColor(face,cv2.COLOR_BGR2RGB))
+                        faces.append(face)
                     # face verification
                     faces = np.array(faces)
                     person_name = facenet_.face_verify(faces,name_ar,emb_ar,FLAGS.match_threshold)

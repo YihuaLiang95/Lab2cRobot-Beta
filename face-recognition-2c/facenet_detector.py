@@ -14,6 +14,9 @@ import time
 import tensorflow as tf 
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+import cv2
+
+from utils import preprocessing
 
 ckpt_path = "./ckpt/facenet/20180402-114759/model-20180402-114759.ckpt-275"
 meta_path = "./ckpt/facenet/20180402-114759/model-20180402-114759.meta" 
@@ -43,7 +46,10 @@ class facenet_detector(object):
             person_name: list of predicted face names.
         """
         # faces preprocessing
+        for i in range(len(faces)):
+            faces[i] = preprocessing.image_processing(faces[i])
         faces = faces / 255.0
+
         # get embeddings
         feed_dict = {self.img_plhd:faces, self.is_train_plhd:False}
         res = self.sess.run(self.emb_plhd,feed_dict=feed_dict)

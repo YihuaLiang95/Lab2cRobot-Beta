@@ -12,6 +12,11 @@ import time
 import tensorflow as tf
 import numpy as np
 from scipy import misc
+import cv2
+
+import matplotlib.pyplot as plt
+
+from utils import preprocessing
 
 # set params
 tf.app.flags.DEFINE_string("ckpt_path","ckpt/facenet/20180402-114759/model-20180402-114759.ckpt-275",
@@ -47,13 +52,20 @@ def main(_):
             for i,file in enumerate(files):
                 print("{}/{} img: {}".format(i+1,len(files),names[i]))
                 file = os.path.join(file,os.listdir(file)[0])
-                img = misc.imread(file,mode="RGB")
+                # RGB mode
+                img = misc.imread(file)
+
                 if img.shape[0] != feed_img_size or img.shape[1] != feed_img_size:
                     img = misc.imresize(img,(feed_img_size,feed_img_size),interp="bilinear")
 
                 # preprocessing, get rid of average brightness influence.
-                channel_mean = np.mean(img,axis=(0,1))
-                img = img / channel_mean
+                # ax1 = plt.subplot(211)
+                # ax1.imshow(img)
+                # ax2 = plt.subplot(212)
+                img = preprocessing.image_processing(img)
+                img = img / 255.0
+                # ax2.imshow(img)
+                # plt.show()
 
                 # get embeddings
                 feed_dict = {images_plhd:np.expand_dims(img,0),
