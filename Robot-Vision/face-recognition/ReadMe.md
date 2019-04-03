@@ -55,7 +55,7 @@ The data is stored with this hierarchy
 
 You may have raw images (not aligned) like **./data/raw_images/person_a.jpg**
 
-Try to use `python align_face.py --load_path=./data/raw_image/a.jpg` 
+Try to use `python align_face.py --load_path=./data/raw_images/a.jpg` 
 
 or simply `python align_face.py --load_path=./data/raw_images`
 
@@ -75,7 +75,7 @@ like:
 
 After face alignment, use 
 
-`python convert_face_to_emb.py --load_path=./data/images --save_path=./data/face_emb.py`
+`python convert_face_to_emb.py --load_path=./data/images --save_path=./data/face_emb.npy`
 
 to extract the embeddings.
 
