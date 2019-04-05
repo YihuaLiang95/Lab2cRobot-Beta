@@ -57,6 +57,8 @@ def main(_):
     # force use of CPU
     if FLAGS.with_gpu == False:
         os.environ["CUDA_VISIBLE_DEVICES"] = ""
+    else:
+        os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 
     threshold = [ 0.6, 0.7, 0.7 ]  # three steps's threshold
     emb_path = FLAGS.emb_path
@@ -74,10 +76,12 @@ def main(_):
         print("Capture video from camera {}.".format(video_path))
     else:
         video_path = FLAGS.video_path
+        print("Capture video from",video_path)
 
     with tf.Graph().as_default():
         gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=
-                            FLAGS.gpu_memory_fraction)
+                            FLAGS.gpu_memory_fraction,
+                            allow_growth=True)
         sess = tf.Session(config=tf.ConfigProto(
                             gpu_options=gpu_options, 
                             log_device_placement=False,
