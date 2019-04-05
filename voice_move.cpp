@@ -7,6 +7,7 @@
 /***********************************************************/
 /* History:                                                */
 /*  20180117:init this source code.                        */
+/*  20190405:lab 2c
 /*                                                         */
 /***********************************************************/
 
@@ -35,8 +36,9 @@ float speed_x = 0.2;
 float speed_y = 0.2;
 float turn_speed = 0.5;
 int pub_flag = 0;
+int nav_flag = 0;
 geometry_msgs::Twist cmd_msg;
-
+std_msgs::String nav_msg;
 
 void subCallBack(const std_msgs::Int32::ConstPtr& msg)
 {
@@ -89,16 +91,16 @@ void subCallBack(const std_msgs::Int32::ConstPtr& msg)
 
         case GO_PROFESSOR:
             {
-                std_msgs::String go_professor;
-                go_professor.data = "go professor";
-                nav_pub.publish(go_professor);
+                //std_msgs::String go_professor;
+                nav_msg.data = "go professor";
+                //nav_pub.publish(go_professor);
                 break;
             }
         case BACK_TO_LAP:
             {
-                std_msgs::String back_to_lap;
-                back_to_lap.data = "back to lap";
-                nav_pub.publish(back_to_lap);
+                //std_msgs::String back_to_lap;
+                nav_msg.data = "back to lap";
+                //nav_pub.publish(back_to_lap);
                 break;
             }
         default:
@@ -106,10 +108,14 @@ void subCallBack(const std_msgs::Int32::ConstPtr& msg)
             break;
     }
 
-    //if((msg->data >= MOVE_FORWARD_CMD)&&(msg->data <= TURN_RIGHT_CMD))
-    if((msg->data >= MOVE_FORWARD_CMD)&&(msg->data <= BACK_TO_LAP))
+    if((msg->data >= MOVE_FORWARD_CMD)&&(msg->data <= TURN_RIGHT_CMD))
+    //if((msg->data >= MOVE_FORWARD_CMD)&&(msg->data <= BACK_TO_LAP))
     {
         pub_flag = 1;
+    }
+    else if( msg->data == 7 || msg->data == 8)
+    {
+        nav_flag = 1;
     }
     else
     {
@@ -138,7 +144,7 @@ int main(int argc, char **argv)
 
     pub = ndHandle.advertise<geometry_msgs::Twist>(pub_move_topic, 1);
 
-    nav_pub = ndHandle.advertise<std_msgs::String>("fuck_the_robot",1);
+    nav_pub = ndHandle.advertise<std_msgs::String>("fuck_the_robot",10);
 
     ros::Rate loop_rate(5);
     while(ros::ok())
@@ -146,6 +152,11 @@ int main(int argc, char **argv)
         if(pub_flag)
         {
             pub.publish(cmd_msg);
+        }
+        else if(nav_flag)
+        {
+            nav_pub.publish(nav_msg);
+            nav_flag = 0;
         }
         loop_rate.sleep();
         ros::spinOnce();
