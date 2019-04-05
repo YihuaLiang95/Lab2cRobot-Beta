@@ -23,10 +23,13 @@ meta_path = "./ckpt/facenet/20180402-114759/model-20180402-114759.meta"
 img_size = 160
 
 class facenet_detector(object):
-    def __init__(self):
+    def __init__(self,sess_config=None):
         # construct a graph for this detector
         self.graph = tf.Graph()
-        self.sess = tf.Session(graph=self.graph)
+        if not sess_config:
+            self.sess = tf.Session(graph=self.graph)
+        else:
+            self.sess = tf.Session(graph=self.graph,config=sess_config)
         with self.graph.as_default():
             # load model
             saver = tf.train.import_meta_graph(meta_path)

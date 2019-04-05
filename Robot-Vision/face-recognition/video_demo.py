@@ -59,7 +59,10 @@ def main(_):
         os.environ["CUDA_VISIBLE_DEVICES"] = ""
     else:
         os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
-
+    
+    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=
+                            FLAGS.gpu_memory_fraction,
+                            allow_growth=True)
     threshold = [ 0.6, 0.7, 0.7 ]  # three steps's threshold
     emb_path = FLAGS.emb_path
     try:
@@ -68,7 +71,8 @@ def main(_):
         print("Cannot load embeddings data from {} !".format(emb_path))
         
     # load face verification model
-    facenet_ = facenet_detector.facenet_detector()
+    facenet_ = facenet_detector.facenet_detector(sess_config=
+        tf.ConfigProto(gpu_options=gpu_options))
     name_ar,emb_ar = facenet_detector.get_names_emb_from_dict(emb_dict)
 
     if FLAGS.video_path in ["0","1"]:
@@ -79,13 +83,8 @@ def main(_):
         print("Capture video from",video_path)
 
     with tf.Graph().as_default():
-        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=
-                            FLAGS.gpu_memory_fraction,
-                            allow_growth=True)
         sess = tf.Session(config=tf.ConfigProto(
-                            gpu_options=gpu_options, 
-                            log_device_placement=False,
-                            allow_soft_placement=True),)
+                            gpu_options=gpu_options),)
         with sess.as_default():
             pnet,rnet,onet = detect_face.create_mtcnn(sess,"./ckpt/mtcnn")
 
