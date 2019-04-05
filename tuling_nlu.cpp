@@ -208,14 +208,14 @@ int parseInputString(string input)
     wstring goAwayStr    = str2wstr(go_away_str);
     wstring stopMoveStr  = str2wstr(stop_move_str);
 	
-	wstring goConferenceRoomStr = str2wstr(go_conference_room_str)
-	wstring goProfZhangOfficeStr = str2wstr(go_prof_zhang_office_str)
-	wstring goProfHuangOfficeStr = str2wstr(go_prof_huang_office_str)
-	wstring goFrontDoorStr = str2wstr(go_front_door_str)
-	wstring goMainEntranceStr = str2wstr(go_main_entrance_str)
-	wstring goAnotherLabStr = str2wstr(go_another_lab_str)
-	wstring goBackOriginStr = str2wstr(go_back_origin_str)
-	wstring quitTheProgram = str2wstr(quit_the_program_str)
+    wstring goConferenceRoomStr = str2wstr(go_conference_room_str);
+    wstring goProfZhangOfficeStr = str2wstr(go_prof_zhang_office_str);
+    wstring goProfHuangOfficeStr = str2wstr(go_prof_huang_office_str);
+    wstring goFrontDoorStr = str2wstr(go_front_door_str);
+    wstring goMainEntranceStr = str2wstr(go_main_entrance_str);
+    wstring goAnotherLabStr = str2wstr(go_another_lab_str);
+    wstring goBackOriginStr = str2wstr(go_back_origin_str);
+    wstring quitTheProgram = str2wstr(quit_the_program_str);
 
     if(convertStr.find(forwardStr) != string::npos)
     {
@@ -253,38 +253,38 @@ int parseInputString(string input)
     {
         ret = STOP_MOVE_CMD; 
     }
-	else if(convertStr.find(goConferenceRoomStr) != string::npos) 
+    else if(convertStr.find(goConferenceRoomStr) != string::npos) 
     {
         ret = GO_CONFERENCE_ROOM; 
     }
-	else if(convertStr.find(goProfZhangOfficeStr) != string::npos) 
+    else if(convertStr.find(goProfZhangOfficeStr) != string::npos) 
     {
         ret = GO_PROF_ZHANG_OFFICE; 
     }
-	else if(convertStr.find(goProfHuangOfficeStr) != string::npos) 
+    else if(convertStr.find(goProfHuangOfficeStr) != string::npos) 
     {
         ret = GO_PROF_HUANG_OFFICE; 
     }
-	else if(convertStr.find(goFrontDoorStr) != string::npos) 
+    else if(convertStr.find(goFrontDoorStr) != string::npos) 
     {
         ret = GO_FRONT_DOOR; 
     }
-	else if(convertStr.find(goMainEntranceStr) != string::npos) 
+    else if(convertStr.find(goMainEntranceStr) != string::npos) 
     {
         ret = GO_MAIN_ENTRANCE; 
     }
-	else if(convertStr.find(goAnotherLabStr) != string::npos) 
+    else if(convertStr.find(goAnotherLabStr) != string::npos) 
     {
         ret = GO_ANOTHER_LAB; 
     }
-	else if(convertStr.find(goBackOriginStr) != string::npos) 
+    else if(convertStr.find(goBackOriginStr) != string::npos) 
     {
         ret = GO_BACK_ORIGIN; 
     }
-	else if(convertStr.find(quitTheProgram) != string::npos)
-	{
-		ret = QUIT_THE_PROGRAM
-	}
+    else if(convertStr.find(quitTheProgram) != string::npos)
+    {
+        ret = QUIT_THE_PROGRAM;
+    }
     return ret;
 }
 
@@ -308,7 +308,7 @@ void nluCallback(const std_msgs::String::ConstPtr& msg)
         move_msg.data = ret;
         cmd_vel_pub.publish(move_msg);
     }
-	else if((ret >= GO_CONFERENCE_ROOM)&&(ret <= QUIT_THE_PROGRAM))
+    else if((ret >= GO_CONFERENCE_ROOM)&&(ret <= QUIT_THE_PROGRAM))
     {
         std_msgs::Int32 move_msg;
         move_msg.data = ret;
@@ -350,14 +350,14 @@ int main(int argc, char **argv)
     ros::param::get("~back_home", back_home_str);    
     ros::param::get("~go_away", go_away_str);
 	
-	ros::param::get("~go_conference_room", go_conference_room_str)
-	ros::param::get("~go_prof_zhang_office", go_prof_zhang_office_str)
-	ros::param::get("~go_prof_huang_office", go_prof_huang_office_str)
-	ros::param::get("~go_front_door", go_front_door_str)
-	ros::param::get("~go_main_entrance", go_main_entrance_str)
-	ros::param::get("~go_another_lab", go_another_lab_str)
-	ros::param::get("~go_back_origin", go_back_origin_str)
-	ros::param::get("~quit_the_program", quit_the_program_str)
+    ros::param::get("~go_conference_room", go_conference_room_str);
+    ros::param::get("~go_prof_zhang_office", go_prof_zhang_office_str);
+    ros::param::get("~go_prof_huang_office", go_prof_huang_office_str);
+    ros::param::get("~go_front_door", go_front_door_str);
+    ros::param::get("~go_main_entrance", go_main_entrance_str);
+    ros::param::get("~go_another_lab", go_another_lab_str);
+    ros::param::get("~go_back_origin", go_back_origin_str);
+    ros::param::get("~quit_the_program", quit_the_program_str);
 
     ros::param::get("~move_topic", cmd_topic);
     ros::param::get("~nav_topic", nav_topic);
