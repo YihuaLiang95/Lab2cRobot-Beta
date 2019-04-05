@@ -1,17 +1,45 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-#zelong yang, 20190331
+#20190404 signal recive
 import rospy
 import random
 import actionlib
 from actionlib_msgs.msg import *
 from geometry_msgs.msg import Pose, Point, Quaternion
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+
+import roslib; roslib.load_manifest('rbx1_speech')
+from geometry_msgs.msg import Twist
+from std_msgs.msg import String,Int32
+from math import copysign
+
+global flag
+flag = 1
+
 class PatrolNav(object):
  
     def __init__(self,sequeue_para = []): #exam:Pose(Point(1.192,  0.053, 0.000), Quaternion(0.000, 0.000, 0.005, 1.000))
+        global flag
+        flag = 0
         rospy.init_node('riki_patrol_nav_node', anonymous=False)
         rospy.on_shutdown(self.shutdown)
+        self.rate = rospy.get_param("~rate", 1)
+        r = rospy.Rate(self.rate)
+
+        #========
+        # Set a number of parameters affecting the robot's speed
+
+        self.nav_command = ""
+
+        # Initialize the Twist message we will publish.
+        while self.nav_command == "" :
+            rospy.loginfo("Waiting for voice command.")
+            rospy.Subscriber('fuck_the_robot', String, self.speech_callback,queue_size=1)
+            r.sleep()
+        
+        # A mapping from keywords or phrases to commands
+        rospy.loginfo("Ready to receive voice commands")
+        #========
  
         # From launch file get parameters
         self.rest_time     = rospy.get_param("~rest_time", 0)
@@ -25,8 +53,13 @@ class PatrolNav(object):
  
         #set all navigation target pose
         self.locations = dict()
-        for i in range(len(sequeue_para)):
-            self.locations[i] = Pose(Point(sequeue_para[i][0],sequeue_para[i][1],sequeue_para[i][2]), Quaternion(sequeue_para[i][3],sequeue_para[i][4],sequeue_para[i][5],sequeue_para[i][6]))
+        if self.nav_command == "go professor":
+            print "go professor."
+            self.locations[0] = Pose(Point(1.000,  0.000, 0.000), Quaternion(0.000, 0.000, 0.000, 1.000))
+            self.locations[1] = Pose(Point(2.000,  0.000, 0.000), Quaternion(0.000, 0.000, 0.000, 1.000))
+        elif self.nav_command == "back to lap":
+            print "back to lap"
+            self.locations[0] = Pose(Point(0.450,  0.000, 0.000), Quaternion(0.000, 0.000, 0.000, 1.000))
  
         # Goal state return values
         goal_states = ['PENDING', 'ACTIVE', 'PREEMPTED', 'SUCCEEDED', 'ABORTED',
@@ -113,6 +146,23 @@ class PatrolNav(object):
                     self.send_goal(0)
                     rospy.signal_shutdown('Quit')
  
+    def speech_callback(self, msg):
+        # Get the motion command from the recognized phrase
+        command = msg.data
+        # Log the command to the screen
+        rospy.loginfo("Command: " + str(command))
+        
+        if command == 'go professor':
+            self.nav_command = "go professor"   
+            print "here"    
+            return
+
+        elif command == 'back to lap':
+            self.nav_command = 'back to lap'
+            return
+        else:
+            return
+
     def send_goal(self, locate):
         # Set up the next goal location
         self.goal = MoveBaseGoal()
@@ -128,3 +178,13 @@ class PatrolNav(object):
  
     def shutdown(self):
         rospy.logwarn("Stopping the patrol...")
+
+if __name__ == '__main__':
+    try:
+#        while(flag):
+        PatrolNav()
+#            global flag
+#            flag = 1
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        rospy.logwarn("patrol navigation exception finished.")
