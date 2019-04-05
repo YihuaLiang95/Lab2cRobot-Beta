@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-#20190404 signal recive
+#20190405 signal recive
 import rospy
 import random
 import actionlib
@@ -13,6 +13,11 @@ from geometry_msgs.msg import Twist
 from std_msgs.msg import String,Int32
 from math import copysign
 
+import time
+
+global flag
+flag = 1
+
 class PatrolNav(object):
     def __init__(self,sequeue_para = []): #exam:Pose(Point(1.192,  0.053, 0.000), Quaternion(0.000, 0.000, 0.005, 1.000))
         rospy.init_node('riki_patrol_nav_node', anonymous=False)
@@ -23,9 +28,9 @@ class PatrolNav(object):
         self.keep_patrol   = rospy.get_param("~keep_patrol",   False)
         self.keep_patrol = False
         self.random_patrol = rospy.get_param("~random_patrol", False)
-		self.random_patrol = False
+        self.random_patrol = False
         self.patrol_type   = rospy.get_param("~patrol_type", 0)
-		self.patrol_type   = 0
+        self.patrol_type   = 0
         self.patrol_loop   = rospy.get_param("~patrol_loop", 1)
         self.patrol_time   = rospy.get_param("~patrol_time", 5)	
 
@@ -39,27 +44,23 @@ class PatrolNav(object):
         rospy.loginfo("Connected to move base server")
 
         #Frequency to get the voice command. Unit: Herts
-        self.rate = rospy.get_param("~rate", 0.5)
+        self.rate = rospy.get_param("~rate", 0.1)
         r = rospy.Rate(self.rate)
 
         self.nav_command = ""
-		Nav_command = self.nav_cammand
 
         # Initialize the Twist message we will publish.
         while self.nav_command != "quit the program" :
+
             rospy.loginfo("Waiting for voice command.")
-			#Subscribe to the publisher and assign the nav_command
+            #Subscribe to the publisher and assign the nav_command
             rospy.Subscriber('fuck_the_robot', String, self.speech_callback,queue_size=1)
-			#The command changed in the midway
-			if Nav_command!= self.command:
-			    rospy.signal_shutdown('Quit')
-				continue
-			#record the command
-			Nav_command = self.nav_cammand
 			
-            r.sleep()
+            #r.sleep()
 			
-            if self.nav_cammand != "" and self.nav_command !="quit the program":
+            if self.nav_command != "" and self.nav_command !="quit the program":
+                global flag
+                flag = 0
                 #set all navigation target pose
                 self.locations = dict()
                 if self.nav_command == "go conference room":
@@ -71,18 +72,18 @@ class PatrolNav(object):
                 elif self.nav_command == "go prof huang office":
                     rospy.loginfo("go prof huang office")
                     self.locations[0] = Pose(Point(-10.625, 5.195,0.000), Quaternion(0.000, 0.000, 0.993, -0.121))#Prof. Huang office
-				elif self.nav_command == "go front door":
+                elif self.nav_command == "go front door":
                     rospy.loginfo("go front door")
                     self.locations[0] = Pose(Point(8.398, -0.327,0.000), Quaternion(0.000,0.000,-0.714, 0.700))# Rm 1506 Conference Rm Front Door
-				elif self.nav_command == "go main entrance":
+                elif self.nav_command == "go main entrance":
                     rospy.loginfo("go main entrance")
                     self.locations[0] = Pose(Point(14.281, 0.227,0.000), Quaternion(0.000,0.000,0.741, 0.672))# Main Entrance
-				elif self.nav_command == "go another lab":
+                elif self.nav_command == "go another lab":
                     rospy.loginfo("go another lab")
                     self.locations[0] = Pose(Point(31.516, 4.700,0.000), Quaternion(0.000,0.000,-0.600,0.780))#Rm 1508 Intelligent Transport Lab
-				elif self.nav_command == "go back origin":
-				    rospy.loginfo("go back origin")
-					self.locations[0] = Pose(Point(0.000,0.000,0.000), Quaternion(0.000,0.000,0.000,1.000))
+                elif self.nav_command == "go back origin":
+                    rospy.loginfo("go back origin")
+                    self.locations[0] = Pose(Point(0.000,0.000,0.000), Quaternion(0.000,0.000,0.000,1.000))
 
                 # Variables to keep track of success rate, running time etc.
                 loop_cnt = 0
@@ -97,28 +98,7 @@ class PatrolNav(object):
  
                 rospy.loginfo("Starting position navigation ")
                 # Begin the main loop and run through a sequence of locations
-                while not rospy.is_shutdown():
-                    #judge if set keep_patrol is true
-                    if self.keep_patrol == False:
-                        if self.patrol_type == 0: #use patrol_loop
-                            if target_num == locations_cnt:
-                                if loop_cnt < self.patrol_loop-1:
-                                    target_num = 0
-                                    loop_cnt = loop_cnt+ 1
-                                    rospy.logwarn("Left patrol loop cnt: %d", self.patrol_loop-loop_cnt)
-                                elif loop_cnt == self.patrol_loop-1:
-                                    rospy.logwarn("Now patrol loop over, exit...")
-                                    #rospy.signal_shutdown('Quit')
-                                    break
-                    elif self.keep_patrol != False:
-                        rospy.loginfo("keep patrol")
-                        if self.random_patrol == False:
-                            rospy.loginfo("random patrol false")
-                            if target_num == locations_cnt:
-                                target_num = 0
-                        elif self.random_patrol == True:
-                            target_num = random.randint(0, locations_cnt-1)
- 
+
                 # Get the next location in the current sequence
                 location = sequeue[target_num]
                 rospy.loginfo("Going to: " + str(location))
@@ -139,6 +119,8 @@ class PatrolNav(object):
                     if state == GoalStatus.SUCCEEDED:
                         n_successes += 1
                         rospy.loginfo("Goal succeeded!")
+                        global flag
+                        flag = 1
                     else:
                         rospy.logerr("Goal failed with error code:"+str(goal_states[state]))
  
@@ -153,11 +135,9 @@ class PatrolNav(object):
                 rospy.loginfo("Running time: " + str(self.trunc(running_time, 1)) + " min")
                 rospy.sleep(self.rest_time)
  
-                if self.keep_patrol == False and self.patrol_type == 1: #use patrol_time
-                    if running_time >= self.patrol_time:
-                        rospy.logwarn("Now reach patrol_time, back to original position...")
-                        self.send_goal(0)
-                        rospy.signal_shutdown('Quit')
+            while(flag==0):
+                time.sleep(1)
+            time.sleep(10)
  
     def speech_callback(self, msg):
         # Get the motion command from the recognized phrase
@@ -165,17 +145,38 @@ class PatrolNav(object):
         # Log the command to the screen
         rospy.loginfo("Command: " + str(command))
         
-        if command == 'go professor':
-            self.nav_command = "go professor"   
-            print "here"    
+        if command == 'go conference room':
+            self.nav_command = "go conference room"   
             return
 
-        elif command == 'back to lap':
-            self.nav_command = 'back to lap'
+        elif command == 'go prof zhang office':
+            self.nav_command = 'go prof zhang office'
+            return
+
+        elif command == 'go prof huang office':
+            self.nav_command = 'go prof huang office'
+            return
+
+        elif command == 'go front door':
+            self.nav_command = 'go front door'
+            return
+
+        elif command == 'go main entrance':
+            self.nav_command = 'go main entrance'
+            return
+
+        elif command == 'go another lab':
+            self.nav_command = 'go another lab'
+            return
+
+        elif command == 'go back origin':
+            self.nav_command = 'go back origin'
             return
 			
-        elif command == 'quit the program'
-		    self.nav_command = 'quit the program'
+        elif command == 'quit the program':
+            self.nav_command = 'quit the program'
+            return
+
         else:
             return
 
