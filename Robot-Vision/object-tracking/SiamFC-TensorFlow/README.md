@@ -10,7 +10,11 @@ Or
 
 `python3 scripts/video_demo.py --video_path=assets/TestFace` demo on **video**.
 
-Modified on **28/Mar/2019 (v0), 30/Mar/2019 (v1)**.
+Or
+
+`sh demo_ipcam` on **remote IP camera**.
+
+Modified on **28/Mar/2019 (v0), 30/Mar/2019 (v1)**, **5/April/2019 (v2)**.
 
 ### Demo Result
 
