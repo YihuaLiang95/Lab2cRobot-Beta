@@ -58,9 +58,12 @@ def main(_):
         video_log_dir = os.path.join(track_config["log_dir"],video_name)
         mkdir_p(video_log_dir)
 
-        if str(FLAGS.video_path) in ["0","1"]:
+        if str(FLAGS.video_path) in ["0","1"] or "http" in FLAGS.video_path:
             # read from camera
-            video_path = int(FLAGS.video_path)
+            if "http" in FLAGS.video_path:
+                video_path = str(FLAGS.video_path)
+            else:
+                video_path = int(FLAGS.video_path)
             with_camera = True
         else:
             # read from video
