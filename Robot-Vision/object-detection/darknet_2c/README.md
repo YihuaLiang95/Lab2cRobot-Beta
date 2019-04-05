@@ -1,3 +1,30 @@
+# YOLOv3 Object Detection
+
+![](./demo/prediction.png)
+
+
+
+## 1.  How to use
+
+Simply run `sh demo.sh` if  there is **test_multiface.mp4** under under your root.
+
+Or if you have a remote **ip camera**, run `sh demo_ipcam.sh` for acquiring remote video stream.
+
+## 2. TODO
+
+- [ ] **Build dataset collected from C2 15-th floor**
+- [ ] **Fine tune on the collected dataset**
+
+
+
+---
+
+
+
+The follows come from the original YOLOv3 repo.
+
+
+
 ![Darknet Logo](http://pjreddie.com/media/files/darknet-black-small.png)
 
 # Modifications #

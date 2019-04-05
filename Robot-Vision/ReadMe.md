@@ -10,7 +10,7 @@
 
   Used for tracking which can help robot movement following specific objects.
 
-- [ ] **Object detection**
+- [x] **Object detection**
 
   Assist the robot SLAM, doing route planning.
 
