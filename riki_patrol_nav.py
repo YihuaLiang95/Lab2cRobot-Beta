@@ -13,20 +13,12 @@ from geometry_msgs.msg import Twist
 from std_msgs.msg import String,Int32
 from math import copysign
 
-global flag
-flag = 1
-
 class PatrolNav(object):
  
     def __init__(self,sequeue_para = []): #exam:Pose(Point(1.192,  0.053, 0.000), Quaternion(0.000, 0.000, 0.005, 1.000))
-        global flag
-        flag = flag+1
-        print flag
         rospy.init_node('riki_patrol_nav_node', anonymous=False)
         rospy.on_shutdown(self.shutdown)
         self.rate = rospy.get_param("~rate", 1)
-        #20190405
-        self.rate = 0.1
         r = rospy.Rate(self.rate)
 
         #========
@@ -37,7 +29,7 @@ class PatrolNav(object):
         # Initialize the Twist message we will publish.
         while self.nav_command == "" :
             rospy.loginfo("Waiting for voice command.")
-            rospy.Subscriber('fuck_the_robot', String, self.speech_callback,queue_size=10)
+            rospy.Subscriber('fuck_the_robot', String, self.speech_callback,queue_size=1)
             r.sleep()
         
         # A mapping from keywords or phrases to commands
@@ -59,7 +51,7 @@ class PatrolNav(object):
         if self.nav_command == "go professor":
             print "go professor."
             self.locations[0] = Pose(Point(8.398, -0.327,0.000), Quaternion(0.000,0.000,-0.714, 0.700)) # Rm 1506 Conference Rm Front Door
-#            self.locations[1] = Pose(Point(2.000,  0.000, 0.000), Quaternion(0.000, 0.000, 0.000, 1.000))
+#            self.locations[1] = Pose(Point(0.000, 0.000,0.000), Quaternion(0.000,0.000,0.000, 1.000))
         elif self.nav_command == "back to lap":
             print "back to lap"
             self.locations[0] = Pose(Point(0.450,  0.000, 0.000), Quaternion(0.000, 0.000, 0.000, 1.000))
@@ -184,10 +176,7 @@ class PatrolNav(object):
 
 if __name__ == '__main__':
     try:
-#        while(flag):
         PatrolNav()
-#            global flag
-#            flag = 1
         rospy.spin()
     except rospy.ROSInterruptException:
         rospy.logwarn("patrol navigation exception finished.")

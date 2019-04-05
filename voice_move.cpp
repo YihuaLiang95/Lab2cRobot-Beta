@@ -144,7 +144,7 @@ int main(int argc, char **argv)
 
     pub = ndHandle.advertise<geometry_msgs::Twist>(pub_move_topic, 1);
 
-    nav_pub = ndHandle.advertise<std_msgs::String>("fuck_the_robot",10);
+    nav_pub = ndHandle.advertise<std_msgs::String>("fuck_the_robot",1);
 
     ros::Rate loop_rate(5);
     while(ros::ok())
