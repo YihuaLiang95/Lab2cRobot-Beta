@@ -12,7 +12,7 @@
 
 - [ ] **Object detection**
 
-  Assist the robot SLAM, doing root planning.
+  Assist the robot SLAM, doing route planning.
 
   
 
