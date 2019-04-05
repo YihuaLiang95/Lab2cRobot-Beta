@@ -7,6 +7,7 @@
  *   20171128:init this file.
  *   20180117:增加解析语音控制小车移动和导航的命令词,可以通过中文语音来控制
  *      小车移动和自动导航到目的地。
+ *   20190405:add commands of TBSI 2C
 */
 
 #include <ros/ros.h>
@@ -32,9 +33,18 @@ static string move_left_str;
 static string move_right_str;
 static string turn_left_str;
 static string turn_right_str;
+static string stop_move_str;
 static string back_home_str;
 static string go_away_str;
-static string stop_move_str;
+
+static string go_conference_room_str;
+static string go_prof_zhang_office_str;
+static string go_prof_huang_office_str;
+static string go_front_door_str;
+static string go_main_entrance_str;
+static string go_another_lab_str;
+static string go_back_origin_str;
+static string quit_the_program_str;
 
 
 #define MOVE_FORWARD_CMD 1
@@ -47,6 +57,15 @@ static string stop_move_str;
 
 #define BACK_HOME_CMD    8
 #define GO_AWAY_CMD      9
+
+#define  GO_CONFERENCE_ROOM 10
+#define  GO_PROF_ZHANG_OFFICE 11
+#define  GO_PROF_HUANG_OFFICE 12
+#define  GO_FRONT_DOOR     13
+#define  GO_MAIN_ENTRANCE  14
+#define  GO_ANOTHER_LAB    15
+#define  GO_BACK_ORIGIN    16
+#define  QUIT_THE_PROGRAM  17
 
 
 ros::Publisher cmd_vel_pub;
@@ -188,6 +207,15 @@ int parseInputString(string input)
     wstring backHomeStr  = str2wstr(back_home_str);
     wstring goAwayStr    = str2wstr(go_away_str);
     wstring stopMoveStr  = str2wstr(stop_move_str);
+	
+	wstring goConferenceRoomStr = str2wstr(go_conference_room_str)
+	wstring goProfZhangOfficeStr = str2wstr(go_prof_zhang_office_str)
+	wstring goProfHuangOfficeStr = str2wstr(go_prof_huang_office_str)
+	wstring goFrontDoorStr = str2wstr(go_front_door_str)
+	wstring goMainEntranceStr = str2wstr(go_main_entrance_str)
+	wstring goAnotherLabStr = str2wstr(go_another_lab_str)
+	wstring goBackOriginStr = str2wstr(go_back_origin_str)
+	wstring quitTheProgram = str2wstr(quit_the_program_str)
 
     if(convertStr.find(forwardStr) != string::npos)
     {
@@ -225,7 +253,38 @@ int parseInputString(string input)
     {
         ret = STOP_MOVE_CMD; 
     }
-
+	else if(convertStr.find(goConferenceRoomStr) != string::npos) 
+    {
+        ret = GO_CONFERENCE_ROOM; 
+    }
+	else if(convertStr.find(goProfZhangOfficeStr) != string::npos) 
+    {
+        ret = GO_PROF_ZHANG_OFFICE; 
+    }
+	else if(convertStr.find(goProfHuangOfficeStr) != string::npos) 
+    {
+        ret = GO_PROF_HUANG_OFFICE; 
+    }
+	else if(convertStr.find(goFrontDoorStr) != string::npos) 
+    {
+        ret = GO_FRONT_DOOR; 
+    }
+	else if(convertStr.find(goMainEntranceStr) != string::npos) 
+    {
+        ret = GO_MAIN_ENTRANCE; 
+    }
+	else if(convertStr.find(goAnotherLabStr) != string::npos) 
+    {
+        ret = GO_ANOTHER_LAB; 
+    }
+	else if(convertStr.find(goBackOriginStr) != string::npos) 
+    {
+        ret = GO_BACK_ORIGIN; 
+    }
+	else if(convertStr.find(quitTheProgram) != string::npos)
+	{
+		ret = QUIT_THE_PROGRAM
+	}
     return ret;
 }
 
@@ -244,6 +303,12 @@ void nluCallback(const std_msgs::String::ConstPtr& msg)
         HttpPostRequest(msg->data, tuling_key);
     }
     else if((ret >= MOVE_FORWARD_CMD)&&(ret <= STOP_MOVE_CMD))
+    {
+        std_msgs::Int32 move_msg;
+        move_msg.data = ret;
+        cmd_vel_pub.publish(move_msg);
+    }
+	else if((ret >= GO_CONFERENCE_ROOM)&&(ret <= QUIT_THE_PROGRAM))
     {
         std_msgs::Int32 move_msg;
         move_msg.data = ret;
@@ -284,6 +349,15 @@ int main(int argc, char **argv)
     
     ros::param::get("~back_home", back_home_str);    
     ros::param::get("~go_away", go_away_str);
+	
+	ros::param::get("~go_conference_room", go_conference_room_str)
+	ros::param::get("~go_prof_zhang_office", go_prof_zhang_office_str)
+	ros::param::get("~go_prof_huang_office", go_prof_huang_office_str)
+	ros::param::get("~go_front_door", go_front_door_str)
+	ros::param::get("~go_main_entrance", go_main_entrance_str)
+	ros::param::get("~go_another_lab", go_another_lab_str)
+	ros::param::get("~go_back_origin", go_back_origin_str)
+	ros::param::get("~quit_the_program", quit_the_program_str)
 
     ros::param::get("~move_topic", cmd_topic);
     ros::param::get("~nav_topic", nav_topic);
@@ -309,5 +383,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
-

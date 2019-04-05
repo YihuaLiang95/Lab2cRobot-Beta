@@ -7,7 +7,7 @@
 /***********************************************************/
 /* History:                                                */
 /*  20180117:init this source code.                        */
-/*  20190405:lab 2c
+/*  20190405:lab 2c                                        */
 /*                                                         */
 /***********************************************************/
 
@@ -16,16 +16,25 @@
 #include <std_msgs/String.h>
 #include <geometry_msgs/Twist.h>
 
+#define MOVE_FORWARD_CMD 1
+#define MOVE_BACK_CMD    2
+#define MOVE_LEFT_CMD    3
+#define MOVE_RIGHT_CMD   4
+#define TURN_LEFT_CMD    5
+#define TURN_RIGHT_CMD   6
+#define STOP_MOVE_CMD    7
 
-#define  MOVE_FORWARD_CMD  1
-#define  MOVE_BACK_CMD     2
-#define  MOVE_LEFT_CMD     3
-#define  MOVE_RIGHT_CMD    4
-#define  TURN_LEFT_CMD     5
-#define  TURN_RIGHT_CMD    6
-#define  GO_PROFESSOR      7
-#define  BACK_TO_LAP       8
-#define  STOP_MOVE_CMD     9
+#define BACK_HOME_CMD    8
+#define GO_AWAY_CMD      9
+
+#define  GO_CONFERENCE_ROOM 10
+#define  GO_PROF_ZHANG_OFFICE 11
+#define  GO_PROF_HUANG_OFFICE 12
+#define  GO_FRONT_DOOR     13
+#define  GO_MAIN_ENTRANCE  14
+#define  GO_ANOTHER_LAB    15
+#define  GO_BACK_ORIGIN    16
+#define  QUIT_THE_PROGRAM  17
 
 
 
@@ -88,19 +97,45 @@ void subCallBack(const std_msgs::Int32::ConstPtr& msg)
             cmd_msg.angular.z = 0; 
             ROS_WARN("Get stop move cmd:%d",msg->data); 
             break;
-
-        case GO_PROFESSOR:
+			
+        case GO_CONFERENCE_ROOM:
             {
-                //std_msgs::String go_professor;
-                nav_msg.data = "go professor";
-                //nav_pub.publish(go_professor);
+                nav_msg.data = "go conference room";
                 break;
             }
-        case BACK_TO_LAP:
+		case GO_PROF_ZHANG_OFFICE:
             {
-                //std_msgs::String back_to_lap;
-                nav_msg.data = "back to lap";
-                //nav_pub.publish(back_to_lap);
+                nav_msg.data = "go prof zhang office";
+                break;
+            }
+		case GO_PROF_HUANG_OFFICE:
+            {
+                nav_msg.data = "go prof huang office";
+                break;
+            }
+		case GO_FRONT_DOOR:
+            {
+                nav_msg.data = "go front door";
+                break;
+            }
+		case GO_MAIN_ENTRANCE:
+            {
+                nav_msg.data = "go main entrance";
+                break;
+            }
+		case GO_ANOTHER_LAB:
+            {
+                nav_msg.data = "go another lab";
+                break;
+            }
+		case GO_BACK_ORIGIN:
+            {
+                nav_msg.data = "go back origin";
+                break;
+            }
+		case QUIT_THE_PROGRAM:
+            {
+                nav_msg.data = "quit the program";
                 break;
             }
         default:
@@ -114,6 +149,10 @@ void subCallBack(const std_msgs::Int32::ConstPtr& msg)
         pub_flag = 1;
     }
     else if( msg->data == 7 || msg->data == 8)
+    {
+        nav_flag = 1;
+    }
+	else if( msg->data >= GO_CONFERENCE_ROOM && msg->data <= QUIT_THE_PROGRAM)
     {
         nav_flag = 1;
     }
@@ -164,4 +203,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-

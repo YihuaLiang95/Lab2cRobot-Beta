@@ -5,18 +5,30 @@
 #
 # History:
 #   20180117: init this file.
+#   20190405: Lab TBSI 2C
 #
 
 # control move key word
 move_forward: 往前走
 move_back: 后退
-turn_left: 左边转
-turn_right: 右边转 
-move_left: 左边走
-move_right: 右边走
-stop_move: 走两步
+move_left: 往左走
+move_right: 往右走
+turn_left: 往左转
+turn_right: 往右转
+stop_move: 停下来
 
 # voice control navigation destination 
 back_home: 回来
 go_away: 出去
+
+
+# 20190405
+go_conference_room: 去会议室
+go_prof_zhang_office: 去张老师办公室
+go_prof_huang_office: 去黄老师办公室
+go_front_door: 去前门
+go_main_entrance: 去电梯间
+go_another_lab: 去另一个实验室
+go_back_origin: 回到起点
+quit_the_program: 退出程序
 
