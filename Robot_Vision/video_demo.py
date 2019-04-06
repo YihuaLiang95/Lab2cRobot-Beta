@@ -31,12 +31,17 @@ FLAGS = tf.app.flags.FLAGS
 # DEMO on remote IP camera
 RESOLUTION = (600,480)
 REMOTE_CAM_IP = "http://10.13.0.235:8080/video"
-video_capture = cv2.VideoCapture(REMOTE_CAM_IP)
+
+if FLAGS.video_path == "0":
+    video_capture = cv2.VideoCapture(int(FLAGS.video_path))
+elif FLAGS.video_path != REMOTE_CAM_IP:
+    video_capture = cv2.VideoCapture(FLAGS.video_path)
+else: # remote IP camera
+    video_capture = cv2.VideoCapture(REMOTE_CAM_IP)
 
 
 def main(_):
     # init modules
-    
     if FLAGS.detect_face:
         facenet = faceNet()
 
