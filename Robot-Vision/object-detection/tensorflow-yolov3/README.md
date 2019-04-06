@@ -1,3 +1,9 @@
+![](./docs/demo.jpg)
+
+---
+
+The following from the original repo.
+
 ## part 1. Introduction
 
 Implementation of YOLO v3 object detector in Tensorflow (TF-Slim). This repository  is inspired by [Paweł Kapica](https://github.com/mystic123). The full details are in [this paper](https://pjreddie.com/media/files/papers/YOLOv3.pdf).  In this project we cover several segments as follows:<br>
@@ -142,8 +148,8 @@ In tensorflow, we can simply implement non maximum suppression algorithm like th
 ```
 for i in range(num_classes):
     tf.image.non_max_suppression(boxes, score[:,i], iou_threshold=0.5) 
- ```
- 
+```
+
 Non-max suppression uses the very important function called **"Intersection over Union"**, or IoU. Here is an exmaple of non maximum suppression algorithm: on input the aglorithm receive 4 overlapping bounding boxes, and the output returns only one
 
 ![image](./docs/images/iou.png)

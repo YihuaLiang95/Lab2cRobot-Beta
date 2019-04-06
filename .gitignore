@@ -106,6 +106,7 @@ venv.bak/
 # checkpoint model
 Robot-Vision/face-recognition/ckpt
 Robot-Vision/object-detection/tensorflow-yolov3/checkpoint
+Robot-Vision/object-detection/tensorflow-yolov3/raccoon_dataset
 
 
 
