@@ -18,9 +18,9 @@ Modified on **28/Mar/2019 (v0), 30/Mar/2019 (v1)**, **5/April/2019 (v2)**.
 
 ### Demo Result
 
-![](assets/exemplar.jpg)
+![](assets/exemplar_demo.jpg)
 
-![](assets/instance.jpg)
+![](assets/instance_demo.jpg)
 
 ---
 **The Followings are from the original Repo of [SiamFC-Tensorflow](https://github.com/bilylee/SiamFC-TensorFlow).**

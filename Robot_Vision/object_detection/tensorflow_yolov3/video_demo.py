@@ -18,10 +18,13 @@ import tensorflow as tf
 from PIL import Image
 from core import utils
 
+import pdb
 
 IMAGE_H, IMAGE_W = 416, 416
+
 # video_path = "./data/demo_data/road.mp4"
-video_path = 0 # use camera
+# video_path = 0 # use camera
+video_path = "http://10.13.0.235:8080/video"
 classes = utils.read_coco_names('./data/coco.names')
 num_classes = len(classes)
 input_tensor, output_tensors = utils.read_pb_return_tensors(tf.get_default_graph(),
@@ -52,7 +55,14 @@ with tf.Session() as sess:
                     fontScale=1, color=(255, 0, 0), thickness=2)
         cv2.namedWindow("result", cv2.WINDOW_AUTOSIZE)
         result = cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
+
         cv2.imshow("result", result)
+        k = cv2.waitKey(1)
+        if k == ord("s"): # save and break
+            cv2.imwrite("./docs/demo_realtime.jpg",result)
+            break
+
         if cv2.waitKey(1) & 0xFF == ord('q'): break
+
 
 
