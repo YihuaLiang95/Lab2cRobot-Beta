@@ -102,37 +102,37 @@ void subCallBack(const std_msgs::Int32::ConstPtr& msg)
                 nav_msg.data = "go conference room";
                 break;
             }
-		case GO_PROF_ZHANG_OFFICE:
+	case GO_PROF_ZHANG_OFFICE:
             {
                 nav_msg.data = "go prof zhang office";
                 break;
             }
-		case GO_PROF_HUANG_OFFICE:
+	case GO_PROF_HUANG_OFFICE:
             {
                 nav_msg.data = "go prof huang office";
                 break;
             }
-		case GO_FRONT_DOOR:
+	case GO_FRONT_DOOR:
             {
                 nav_msg.data = "go front door";
                 break;
             }
-		case GO_MAIN_ENTRANCE:
+	case GO_MAIN_ENTRANCE:
             {
                 nav_msg.data = "go main entrance";
                 break;
             }
-		case GO_ANOTHER_LAB:
+	case GO_ANOTHER_LAB:
             {
                 nav_msg.data = "go another lab";
                 break;
             }
-		case GO_BACK_ORIGIN:
+	case GO_BACK_ORIGIN:
             {
                 nav_msg.data = "go back origin";
                 break;
             }
-		case QUIT_THE_PROGRAM:
+	case QUIT_THE_PROGRAM:
             {
                 nav_msg.data = "quit the program";
                 break;
