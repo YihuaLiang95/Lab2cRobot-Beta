@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
-#20190405 signal recive
+#20190406 signal recive
 import rospy
 import random
 import actionlib
@@ -134,10 +134,13 @@ class PatrolNav(object):
                               str(100 * n_successes/n_goals) + "%")
                 rospy.loginfo("Running time: " + str(self.trunc(running_time, 1)) + " min")
                 rospy.sleep(self.rest_time)
- 
+            if self.nav_command=="quit the program":
+                global flag
+                flag = 1
             while(flag==0):
                 time.sleep(1)
-            time.sleep(10)
+            time.sleep(5)
+        rospy.loginfo("program finished.")
  
     def speech_callback(self, msg):
         # Get the motion command from the recognized phrase

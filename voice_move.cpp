@@ -7,7 +7,7 @@
 /***********************************************************/
 /* History:                                                */
 /*  20180117:init this source code.                        */
-/*  20190405:lab 2c                                        */
+/*  20190406:lab 2c                                        */
 /*                                                         */
 /***********************************************************/
 
@@ -41,9 +41,9 @@
 ros::Publisher pub;
 ros::Publisher nav_pub;
 
-float speed_x = 0.2;
-float speed_y = 0.2;
-float turn_speed = 0.5;
+float speed_x = 0.5;
+float speed_y = 0.5;
+float turn_speed = 1.0;
 int pub_flag = 0;
 int nav_flag = 0;
 geometry_msgs::Twist cmd_msg;
@@ -191,11 +191,12 @@ int main(int argc, char **argv)
         if(pub_flag)
         {
             pub.publish(cmd_msg);
+            pub_flag=0; //only send once
         }
         else if(nav_flag)
         {
             nav_pub.publish(nav_msg);
-            nav_flag = 0;
+            nav_flag = 0; //only send once
         }
         loop_rate.sleep();
         ros::spinOnce();
