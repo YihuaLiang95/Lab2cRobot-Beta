@@ -104,9 +104,9 @@ venv.bak/
 .mypy_cache/
 
 # checkpoint model
-Robot-Vision/face-recognition/ckpt
-Robot-Vision/object-detection/tensorflow-yolov3/checkpoint
-Robot-Vision/object-detection/tensorflow-yolov3/raccoon_dataset
+Robot_Vision/face_recognition/ckpt
+Robot_Vision/object_detection/tensorflow_yolov3/checkpoint
+Robot_Vision/object_detection/tensorflow_yolov3/raccoon_dataset
 
 
 
