@@ -1,5 +1,25 @@
 # Robot Vision
 
+## 0. How to demo
+
+The present work has concluded face recognition and object detection, u can use
+
+`python3 video_demo.py --detect_face=True --detect_object=True`
+
+to use both of them, or simply `sh video_demo.sh`.
+
+For fast video processing, the interval that frame is being processed is set in
+
+**cfg/face_config.py** and **cfg/object_config.py**
+
+Use smaller interval if you have more powerful GPU :）
+
+
+
+![](docs/demo.jpg)
+
+
+
 ## 1. Fundamental tasks
 
 - [x] **Face recognition**

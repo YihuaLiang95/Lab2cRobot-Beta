@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Provide face-recognition API to access.
 """
+# -*- coding: utf-8 -*-
 
 import os
 import pdb
@@ -26,17 +27,15 @@ facenet_meta_path = os.path.join(root_path,"ckpt/facenet/20180402-114759/model-2
 
 class faceNet(object):
     def __init__(self):
-        self.graph = tf.Graph()
         with tf.Graph().as_default():
             self.sess = tf.Session()
-            with tf.device(":/cpu:0"):
-                # load mtcnn detector
-                self.pnet,self.rnet,self.onet = \
-                        detect_face.create_mtcnn(self.sess,mtcnn_path)
-                # load face verification model
-                self.face_verify = facenet_detector.facenet_detector(meta_path = facenet_meta_path,
-                        ckpt_path = facenet_ckpt_path)
-                self.name_ar,self.emb_ar = facenet_detector.get_names_emb_from_dict(emb_dict)
+            # load mtcnn detector
+            self.pnet,self.rnet,self.onet = \
+                    detect_face.create_mtcnn(self.sess,mtcnn_path)
+            # load face verification model
+            self.face_verify = facenet_detector.facenet_detector(meta_path = facenet_meta_path,
+                    ckpt_path = facenet_ckpt_path)
+            self.name_ar,self.emb_ar = facenet_detector.get_names_emb_from_dict(emb_dict)
 
     def detect_face(self,frame):
         # detect face
@@ -55,7 +54,6 @@ class faceNet(object):
             faces = np.array(faces)
             person_name = self.face_verify.face_verify(faces,
                         self.name_ar,self.emb_ar,config.match_threshold)
-
         else:
             person_name = []
 
@@ -63,14 +61,29 @@ class faceNet(object):
 
     def detect_face_and_draw_box(self,frame):
         det_arr = self.detect_face(frame)
+        if len(det_arr) > 0:
+            for i,det in enumerate(det_arr):
+                self.draw_box(frame,det)
+        return det_arr
+
+    def detect_face_name_and_draw_box(self,frame):
+        det_arr = self.detect_face(frame)
         person_name = self.verify_face(frame,det_arr)
         if len(det_arr) > 0:
             for i,det in enumerate(det_arr):
-                self.draw_box(frame,det,person_name=person_name[i])
+                self.draw_box_with_name(frame,det,person_name=person_name[i])
+        return person_name
 
-    def draw_box(self,frame,box,person_name="Unknown"):
+
+    def draw_box_with_name(self,frame,box,person_name="Unknown"):
         box = box.astype(int)
         cv2.putText(frame,person_name,(box[0],box[3]),
+                    cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),1)
+        cv2.rectangle(frame,(box[0],box[1]),(box[2],box[3]),(0,97,255),2)      
+
+    def draw_box(self,frame,box):
+        box = box.astype(int)
+        cv2.putText(frame,"face",(box[0],box[3]),
                     cv2.FONT_HERSHEY_SIMPLEX,1,(0,255,0),1)
         cv2.rectangle(frame,(box[0],box[1]),(box[2],box[3]),(0,97,255),2)      
 
