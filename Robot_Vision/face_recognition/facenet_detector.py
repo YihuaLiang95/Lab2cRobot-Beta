@@ -18,12 +18,12 @@ import cv2
 
 from utils import preprocessing
 
-ckpt_path = "./ckpt/facenet/20180402-114759/model-20180402-114759.ckpt-275"
-meta_path = "./ckpt/facenet/20180402-114759/model-20180402-114759.meta" 
+CKPT_PATH = "./ckpt/facenet/20180402-114759/model-20180402-114759.ckpt-275"
+META_PATH = "./ckpt/facenet/20180402-114759/model-20180402-114759.meta" 
 img_size = 160
 
 class facenet_detector(object):
-    def __init__(self,sess_config=None):
+    def __init__(self,sess_config=None,meta_path=None,ckpt_path=None):
         # construct a graph for this detector
         self.graph = tf.Graph()
         if not sess_config:
@@ -31,9 +31,15 @@ class facenet_detector(object):
         else:
             self.sess = tf.Session(graph=self.graph,config=sess_config)
         with self.graph.as_default():
+
             # load model
-            saver = tf.train.import_meta_graph(meta_path)
-            saver.restore(self.sess,ckpt_path)
+            if not ckpt_path or not meta_path:
+                saver = tf.train.import_meta_graph(META_PATH)
+                saver.restore(self.sess,CKPT_PATH)
+            else:
+                saver = tf.train.import_meta_graph(meta_path)
+                saver.restore(self.sess,ckpt_path)
+
             # get placeholders
             self.img_plhd = tf.get_default_graph().get_tensor_by_name("input:0")
             self.emb_plhd = tf.get_default_graph().get_tensor_by_name("embeddings:0")
