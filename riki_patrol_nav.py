@@ -14,6 +14,7 @@ from std_msgs.msg import String,Int32
 from math import copysign
 
 import time
+from math import *
 
 global flag
 flag = 1
@@ -58,12 +59,77 @@ class PatrolNav(object):
 			
             #r.sleep()
 			
+			#Move and turn commands
+			Location_record = [0.000,0.000,0.000,0.000,0.000,0.000,0.000]
+			speed_x = 0.2
+			speed_y = 0.2
+			speed_z = 0.0
+			
             if self.nav_command != "" and self.nav_command !="quit the program":
                 global flag
                 flag = 0
                 #set all navigation target pose
                 self.locations = dict()
-                if self.nav_command == "go conference room":
+				
+				cost_up = sqrt((Location_record[5]-0.000)**2+(Location_record[6]-1.000)**2)
+                cost_down = sqrt((Location_record[5]-1.000)**2+(Location_record[6]-0.000)**2)
+                cost_left = sqrt((Location_record[5]+0.7)**2+(Location_record[6]-0.7)**2)
+                cost_right = sqrt((Location_record[5]-0.700)**2+(Location_record[6]-0.700)**2)
+					
+                if self.nav_command == "move forward":
+                    rospy.loginfo("move forward")
+                    self.locations[0] = Pose(Point(Location_record[0]+speed_x,Location_record[1],Location_record[2]), Quaternion(Location_record[3],Location_record[4],Location_record[5],Location_record[6]))
+                elif self.nav_command == "move backward":
+                    rospy.loginfo("move backward")
+                    self.locations[0] = Pose(Point(Location_record[0]-speed_x,Location_record[1],Location_record[2]), Quaternion(Location_record[3],Location_record[4],Location_record[5],Location_record[6]))
+                elif self.nav_command == "move leftward":
+                    rospy.loginfo("move leftward")
+					if cost_up==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[-0.700,0.700]
+                    elif cost_down==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[0.700,0.700]
+                    elif cost_left==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[1.000,0.000]
+                    elif cost_right==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[0.000,1.000]
+                    self.locations[0] = Pose(Point(Location_record[0],Location_record[1]+speed_y,Location_record[2]), Quaternion(Location_record[3],Location_record[4],Location_record[5],Location_record[6]))
+                elif self.nav_command == "move rightward":
+					if cost_up==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[0.700,0.700]
+                    elif cost_down==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[-0.700,0.700]
+                    elif cost_left==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[0.000,1.000]
+                    elif cost_right==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[1.000,0.000]
+                    rospy.loginfo("move rightward")
+                    self.locations[0] = Pose(Point(Location_record[0],Location_record[1]-speed_y,Location_record[2]), Quaternion(Location_record[3],Location_record[4],Location_record[5],Location_record[6]))
+                elif self.nav_command == "turn leftward":
+					if cost_up==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[-0.700,0.700]
+                    elif cost_down==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[0.700,0.700]
+                    elif cost_left==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[1.000,0.000]
+                    elif cost_right==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[0.000,1.000]
+                    rospy.loginfo("turn leftward")
+                    self.locations[0] = Pose(Point(Location_record[0],Location_record[1],Location_record[2]), Quaternion(Location_record[3],Location_record[4],Location_record[5],Location_record[6]))
+                elif self.nav_command == "turn rightward":
+					if cost_up==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[0.700,0.700]
+                    elif cost_down==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[-0.700,0.700]
+                    elif cost_left==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[0.000,1.000]
+                    elif cost_right==min(cost_up,cost_down,cost_left,cost_right):
+                        Location_record[5:]=[1.000,0.000]
+                    rospy.loginfo("turn rightward")
+                    self.locations[0] = Pose(Point(Location_record[0],Location_record[1],Location_record[2]), Quaternion(Location_record[3],Location_record[4],Location_record[5],Location_record[6]))
+                elif self.nav_command == "stop move":
+                    rospy.loginfo("stop move")
+                    self.locations[0] = Pose(Point(Location_record[0],Location_record[1],Location_record[2]), Quaternion(Location_record[3],Location_record[4],Location_record[5],Location_record[6]))
+                elif self.nav_command == "go conference room":
                     rospy.loginfo("go conference room")
                     self.locations[0] = Pose(Point(-5.584, 0.412,0.000), Quaternion(0.000, 0.000, 0.736, 0.677)) # Rm 1516 Conference Rm
                 elif self.nav_command == "go prof zhang office":
@@ -91,10 +157,10 @@ class PatrolNav(object):
                 n_successes  = 0
                 target_num   = 0
                 running_time = 0
-                location   = 0
                 start_time = rospy.Time.now()
                 locations_cnt = len(self.locations)
                 sequeue = range(0,locations_cnt)
+				location = 0
  
                 rospy.loginfo("Starting position navigation ")
                 # Begin the main loop and run through a sequence of locations
@@ -119,6 +185,7 @@ class PatrolNav(object):
                     if state == GoalStatus.SUCCEEDED:
                         n_successes += 1
                         rospy.loginfo("Goal succeeded!")
+                        Location_record = self.locations[location]
                         global flag
                         flag = 1
                     else:

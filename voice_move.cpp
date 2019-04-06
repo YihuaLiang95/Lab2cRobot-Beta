@@ -56,47 +56,46 @@ void subCallBack(const std_msgs::Int32::ConstPtr& msg)
     switch(msg->data)
     {
         case MOVE_FORWARD_CMD: //move forward
-            cmd_msg.linear.x = speed_x;
-            cmd_msg.linear.y = 0;
-            cmd_msg.angular.z = 0;
-            break;
+            {
+                nav_msg.data = "move forward";
+                break;
+            }
 
         case MOVE_BACK_CMD: //move back 
-            cmd_msg.linear.x = -speed_x; 
-            cmd_msg.linear.y = 0;
-            cmd_msg.angular.z = 0;
-            break;
+            {
+                nav_msg.data = "move backward";
+                break;
+            }
 
         case MOVE_LEFT_CMD: //move left 
-            cmd_msg.linear.x = 0;
-            cmd_msg.linear.y = speed_y; 
-            cmd_msg.angular.z = 0;
-            break;
+            {
+                nav_msg.data = "move leftward";
+                break;
+            }
 
         case MOVE_RIGHT_CMD: //move right 
-            cmd_msg.linear.x = 0;
-            cmd_msg.linear.y = -speed_y; 
-            cmd_msg.angular.z = 0;
-            break;
+            {
+                nav_msg.data = "move rightward";
+                break;
+            }
 
         case TURN_LEFT_CMD: //turn left 
-            cmd_msg.linear.x = 0;
-            cmd_msg.linear.y = 0; 
-            cmd_msg.angular.z = turn_speed; 
-            break;
+            {
+                nav_msg.data = "turn left";
+                break;
+            }
 
         case TURN_RIGHT_CMD: //turn right 
-            cmd_msg.linear.x = 0;
-            cmd_msg.linear.y = 0; 
-            cmd_msg.angular.z = -turn_speed; 
-            break;
+            {
+                nav_msg.data = "turn right";
+                break;
+            }
 
         case STOP_MOVE_CMD: //stop move 
-            cmd_msg.linear.x = 0;
-            cmd_msg.linear.y = 0;
-            cmd_msg.angular.z = 0; 
-            ROS_WARN("Get stop move cmd:%d",msg->data); 
-            break;
+            {
+                nav_msg.data = "stop move";
+                break;
+            }
 			
         case GO_CONFERENCE_ROOM:
             {
@@ -146,7 +145,7 @@ void subCallBack(const std_msgs::Int32::ConstPtr& msg)
     if((msg->data >= MOVE_FORWARD_CMD)&&(msg->data <= TURN_RIGHT_CMD))
     //if((msg->data >= MOVE_FORWARD_CMD)&&(msg->data <= BACK_TO_LAP))
     {
-        pub_flag = 1;
+        nav_flag = 1;
     }
     else if( msg->data == 7 || msg->data == 8)
     {
