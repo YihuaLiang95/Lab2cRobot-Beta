@@ -4,9 +4,9 @@
 
 The present work has concluded face recognition and object detection, u can use
 
-`python3 video_demo.py --detect_face=True --detect_object=True`
+`python3 video_demo.py --viedo_path=0 --detect_face=True --detect_object=True`
 
-to use both of them, or simply `sh video_demo.sh`.
+to use both of them, or run `sh video_demo.sh` to use remote IP camera.
 
 For fast video processing, the interval that frame is being processed is set in
 
