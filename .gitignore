@@ -105,8 +105,8 @@ venv.bak/
 
 # checkpoint model
 Robot-Vision/face-recognition/ckpt
-Robot-Vision/object-detection/darknet_2c/yolov3.weights
-Robot-Vision/object-detection/darknet_2c/yolov3-tiny.weights
+Robot-Vision/object-detection/tensorflow-yolov3/checkpoint
+
 
 
 
