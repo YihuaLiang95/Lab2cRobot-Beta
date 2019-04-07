@@ -4,7 +4,7 @@ class Config:
     """
     Face Recognition Config
     """
-    face_detect_interval = 20
+    face_detect_interval = 50
 
     face_threshold = 0.9
     scale_factor = 0.709

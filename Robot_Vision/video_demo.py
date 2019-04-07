@@ -58,6 +58,7 @@ def main(_):
     while True:
         ret,frame = video_capture.read()
         frame = cv2.resize(frame,RESOLUTION,interpolation=cv2.INTER_LINEAR)
+        raw_frame = frame.copy()
 
         # detect objects
         if FLAGS.detect_object:
@@ -67,10 +68,14 @@ def main(_):
         # detect face
         if FLAGS.detect_face:
             if f_count % face_config.face_detect_interval == 0:
-                person_name = facenet.detect_face_name_and_draw_box(frame)
-                print("Hello, {} !".format(person_name))
+                frame,person_name = facenet.detect_face_name_and_draw_box(frame)
+                if len(person_name) > 0:
+                    print("Hello, {} !".format(",".join(person_name)))
+                else:
+                    print("No person found!")
+
             else:
-                facenet.detect_face_and_draw_box(frame)
+                frame,det_arr = facenet.detect_face_and_draw_box(frame)
         
         # put Text
         fps_info = "FPS: {}".format(f_rate)
@@ -83,14 +88,33 @@ def main(_):
             f_rate = int(5/(end_time-start_time))
             start_time = time.time()
 
-        # if f_count % face_config.face_detect_interval == 0:
-        #     cv2.imwrite("object_detect.jpg",frame)
+        key = cv2.waitKey(1)
+        if key == ord("f"):
+            # detect face
+            try:
+                frame,person_name = facenet.detect_face_name_and_draw_box(raw_frame)
+            except:
+                raise ImportError("The face recognition module is not initialized.")
+            cv2.namedWindow("Face_Recognition")
+            cv2.imshow("Face_Recognition",frame)
+            cv2.imwrite("face.jpg",frame)
+
+        if key == ord("o"):
+            # detect objects
+            try:
+                frame = yolo.detect_object_and_draw_box(raw_frame)
+            except:
+                raise ImportError("The object detection module is not initialized.")
+            cv2.namedWindow("Object_Detection")
+            cv2.imshow("Object_Detection",frame)
+            cv2.imwrite("object.jpg",frame)
+
+        if  key == ord("q"):
+            break
 
         print("FPS:",int(f_rate))
         f_count += 1
         cv2.imshow("Real-time",frame)
-        if cv2.waitKey(1) & 0xFF == ord("q"):
-            break
 
     video_capture.release()
     cv2.destroyAllWindows()

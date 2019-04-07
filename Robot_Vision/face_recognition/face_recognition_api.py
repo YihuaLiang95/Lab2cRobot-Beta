@@ -33,7 +33,7 @@ class faceNet(object):
             self.pnet,self.rnet,self.onet = \
                     detect_face.create_mtcnn(self.sess,mtcnn_path)
             # load face verification model
-            self.face_verify = facenet_detector.facenet_detector(meta_path = facenet_meta_path,
+            self.verify_cls = facenet_detector.facenet_detector(meta_path = facenet_meta_path,
                     ckpt_path = facenet_ckpt_path)
             self.name_ar,self.emb_ar = facenet_detector.get_names_emb_from_dict(emb_dict)
 
@@ -52,27 +52,37 @@ class faceNet(object):
                 face = misc.imresize(face,(160,160),interp="bilinear")
                 faces.append(face)
             faces = np.array(faces)
-            person_name = self.face_verify.face_verify(faces,
+            person_name = self.verify_cls.face_verify(faces,
                         self.name_ar,self.emb_ar,config.match_threshold)
         else:
             person_name = []
 
         return person_name
 
+    def verify_face_and_draw_box(self,frame,det_arr):
+        o_frame = frame.copy()
+        person_name = self.verify_face(frame,det_arr)
+        if len(det_arr) > 0:
+            for i,det in enumerate(det_arr):
+                self.draw_box_with_name(o_frame,det,person_name=person_name[i])
+        return o_frame,person_name
+
     def detect_face_and_draw_box(self,frame):
+        o_frame = frame.copy()
         det_arr = self.detect_face(frame)
         if len(det_arr) > 0:
             for i,det in enumerate(det_arr):
-                self.draw_box(frame,det)
-        return det_arr
+                self.draw_box(o_frame,det)
+        return o_frame,det_arr
 
     def detect_face_name_and_draw_box(self,frame):
+        o_frame = frame.copy()
         det_arr = self.detect_face(frame)
         person_name = self.verify_face(frame,det_arr)
         if len(det_arr) > 0:
             for i,det in enumerate(det_arr):
-                self.draw_box_with_name(frame,det,person_name=person_name[i])
-        return person_name
+                self.draw_box_with_name(o_frame,det,person_name=person_name[i])
+        return o_frame,person_name
 
 
     def draw_box_with_name(self,frame,box,person_name="Unknown"):

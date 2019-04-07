@@ -20,6 +20,18 @@ Use smaller interval if you have more powerful GPU :）
 
 
 
+When you have set `--detect_face=True`, you may press bottom **f** to caputure one frame and do face recognition.
+
+![](docs/face.jpg)
+
+Samely when `--detect_object=True`, you may press bottom **o** to caputre one frame and do object detection.
+
+![](docs/object.jpg)
+
+
+
+
+
 ## 1. Fundamental tasks
 
 - [x] **Face recognition**
