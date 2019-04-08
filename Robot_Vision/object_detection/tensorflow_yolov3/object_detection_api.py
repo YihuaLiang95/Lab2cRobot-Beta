@@ -24,9 +24,13 @@ IMAGE_H, IMAGE_W = 416, 416
 
 class YOLOv3(object):
     def __init__(self):
+        # set GPU options
+        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5,allow_growth=True)
+        sess_config = tf.ConfigProto(gpu_options=gpu_options)
+
         self.graph = tf.Graph()
         with tf.Graph().as_default():
-            self.sess = tf.Session()
+            self.sess = tf.Session(config=sess_config)
             self.input_tensor,self.output_tensors = utils.read_pb_return_tensors(tf.get_default_graph(),
                     nms_path,["Placeholder:0", "concat_9:0", "mul_6:0"])
 
