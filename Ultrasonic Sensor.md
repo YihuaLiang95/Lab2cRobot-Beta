@@ -16,13 +16,13 @@
 
    In the example above, the `CB 55`is the header part(which should be fixed value for this sensor), while `04` means that the distance output string consists of four values behind it. `AA BB CC AA`here is **the real detected distance** by the four detectors respectively, which is measured in centimeter(cm) and shown as HEX(16进制) value. For this case, we have the distance as follows:
 
-   Detector A: $AA=0xaa=170cm​$
+   Detector A: $$AA=0xaa=170cm$$
 
-   Detector B: $BB=0xbb=187cm$
+   Detector B: $$BB=0xbb=187cm$$
 
-   Detector C: $CC=0xcc=204cm​$
+   Detector C: $$CC=0xcc=204cm$$
 
-   Detector D: $AA=0xaa=170cm​$
+   Detector D: $$AA=0xaa=170cm$$
 
    | **0xcb** | **固定帧头**       |
    | -------- | ------------------ |
