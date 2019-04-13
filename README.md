@@ -1,13 +1,17 @@
-# Lab2cRobot-Beta
-This repository is just for test</br>
-   # 1. Download git bash</br>
-   # 2. Config your github account and github email by</br>
+# Zelong Yang's work
+List the work done and to be done week by week.
+   # 1. Week 3 and 4</br>
+   '''
+     Doing the contacting work with Jinzheng Company and Siemens company. After consulting, we decided not to do the internet of things module temporarily. Then I joined the motion group.
+   '''
+   # 2. Week 5</br>
    ```
-     git config --global user.name:yourusername
-     git config --global user.email:youremail   
+     Wrote a function to directly control the motion of the robot using command streams (like 'forward', 'forward', ...) instead of the keyboard control.
+     Wrote a module to desgnate the destination point to the robot and it will find its way there automaticly.
+     Found the format of the position points, designed a way from room 1505 to the conference room.
    ```
    "--global" means this account will be used for all git repo on this computer. </br>
-   # 3. generate ssh key by</br>
+   # 3. Week 6</br>
    ```
    cd ~/.ssh
    ssh-keygen -t rsa -C "your_email@example.com"
