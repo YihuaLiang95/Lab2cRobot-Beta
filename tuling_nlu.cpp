@@ -28,11 +28,28 @@ static int flag = 0;
 static string result;
 static string tuling_key="175418b0747f4c50b15843fe0849067e"; //default tuling key
 static string move_forward_str;
+static string move_forward_str1;
+static string move_forward_str2;
+static string move_forward_str3;
+static string move_forward_str4;
+static string move_forward_str5;
+static string move_forward_str6;
+static string move_forward_str7;
 static string move_back_str;
+static string move_back_str1;
+static string move_back_str2;
 static string move_left_str;
+static string move_left_str1;
+static string move_left_str2;
 static string move_right_str;
+static string move_right_str1;
+static string move_right_str2;
 static string turn_left_str;
+static string turn_left_str1;
+static string turn_left_str2;
 static string turn_right_str;
+static string turn_right_str1;
+static string turn_right_str2;
 static string stop_move_str;
 static string back_home_str;
 static string go_away_str;
@@ -199,11 +216,28 @@ int parseInputString(string input)
     wstring convertStr = str2wstr(input); 
 
     wstring forwardStr   = str2wstr(move_forward_str);
+    wstring forwardStr1   = str2wstr(move_forward_str1);
+    wstring forwardStr2   = str2wstr(move_forward_str2);
+    wstring forwardStr3   = str2wstr(move_forward_str3);
+    wstring forwardStr4   = str2wstr(move_forward_str4);
+    wstring forwardStr5   = str2wstr(move_forward_str5);
+    wstring forwardStr6   = str2wstr(move_forward_str6);
+    wstring forwardStr7   = str2wstr(move_forward_str7);
     wstring backStr      = str2wstr(move_back_str);
+    wstring backStr1      = str2wstr(move_back_str1);
+    wstring backStr2      = str2wstr(move_back_str2);
     wstring moveLeftStr  = str2wstr(move_left_str);
+    wstring moveLeftStr1  = str2wstr(move_left_str1);
+    wstring moveLeftStr2  = str2wstr(move_left_str2);
     wstring moveRightStr = str2wstr(move_right_str);
+    wstring moveRightStr1 = str2wstr(move_right_str1);
+    wstring moveRightStr2 = str2wstr(move_right_str2);
     wstring turnLeftStr  = str2wstr(turn_left_str);
+    wstring turnLeftStr1  = str2wstr(turn_left_str1);
+    wstring turnLeftStr2  = str2wstr(turn_left_str2);
     wstring turnRightStr = str2wstr(turn_right_str);
+    wstring turnRightStr1 = str2wstr(turn_right_str1);
+    wstring turnRightStr2 = str2wstr(turn_right_str2);
     wstring backHomeStr  = str2wstr(back_home_str);
     wstring goAwayStr    = str2wstr(go_away_str);
     wstring stopMoveStr  = str2wstr(stop_move_str);
@@ -221,7 +255,43 @@ int parseInputString(string input)
     {
         ret = MOVE_FORWARD_CMD;
     }
+    if(convertStr.find(forwardStr1) != string::npos)
+    {
+        ret = MOVE_FORWARD_CMD;
+    }
+    if(convertStr.find(forwardStr2) != string::npos)
+    {
+        ret = MOVE_FORWARD_CMD;
+    }
+    if(convertStr.find(forwardStr3) != string::npos)
+    {
+        ret = MOVE_FORWARD_CMD;
+    }
+    if(convertStr.find(forwardStr4) != string::npos)
+    {
+        ret = MOVE_FORWARD_CMD;
+    }
+    if(convertStr.find(forwardStr5) != string::npos)
+    {
+        ret = MOVE_FORWARD_CMD;
+    }
+    if(convertStr.find(forwardStr6) != string::npos)
+    {
+        ret = MOVE_FORWARD_CMD;
+    }
+    if(convertStr.find(forwardStr7) != string::npos)
+    {
+        ret = MOVE_FORWARD_CMD;
+    }
     else if(convertStr.find(backStr) != string::npos) 
+    {
+        ret = MOVE_BACK_CMD; 
+    }
+    else if(convertStr.find(backStr1) != string::npos) 
+    {
+        ret = MOVE_BACK_CMD; 
+    }
+    else if(convertStr.find(backStr2) != string::npos) 
     {
         ret = MOVE_BACK_CMD; 
     }
@@ -229,7 +299,23 @@ int parseInputString(string input)
     {
         ret = MOVE_LEFT_CMD; 
     }
+    else if(convertStr.find(moveLeftStr1) != string::npos) 
+    {
+        ret = MOVE_LEFT_CMD; 
+    }
+    else if(convertStr.find(moveLeftStr2) != string::npos) 
+    {
+        ret = MOVE_LEFT_CMD; 
+    }
     else if(convertStr.find(moveRightStr) != string::npos) 
+    {
+        ret = MOVE_RIGHT_CMD; 
+    }
+    else if(convertStr.find(moveRightStr1) != string::npos) 
+    {
+        ret = MOVE_RIGHT_CMD; 
+    }
+    else if(convertStr.find(moveRightStr2) != string::npos) 
     {
         ret = MOVE_RIGHT_CMD; 
     }
@@ -237,7 +323,23 @@ int parseInputString(string input)
     {
         ret = TURN_LEFT_CMD; 
     }
+    else if(convertStr.find(turnLeftStr1) != string::npos) 
+    {
+        ret = TURN_LEFT_CMD; 
+    }
+    else if(convertStr.find(turnLeftStr2) != string::npos) 
+    {
+        ret = TURN_LEFT_CMD; 
+    }
     else if(convertStr.find(turnRightStr) != string::npos) 
+    {
+        ret = TURN_RIGHT_CMD; 
+    }
+    else if(convertStr.find(turnRightStr1) != string::npos) 
+    {
+        ret = TURN_RIGHT_CMD; 
+    }
+    else if(convertStr.find(turnRightStr2) != string::npos) 
     {
         ret = TURN_RIGHT_CMD; 
     }
@@ -340,11 +442,28 @@ int main(int argc, char **argv)
     ros::param::get("~tuling_key", tuling_key);
 
     ros::param::get("~move_forward", move_forward_str);
+    ros::param::get("~move_forward1", move_forward_str1);
+    ros::param::get("~move_forward2", move_forward_str2);
+    ros::param::get("~move_forward3", move_forward_str3);
+    ros::param::get("~move_forward4", move_forward_str4);
+    ros::param::get("~move_forward5", move_forward_str5);
+    ros::param::get("~move_forward6", move_forward_str6);
+    ros::param::get("~move_forward7", move_forward_str7);
     ros::param::get("~move_back",  move_back_str);
+    ros::param::get("~move_back1",  move_back_str1);
+    ros::param::get("~move_back2",  move_back_str2);
     ros::param::get("~move_left",  move_left_str);
+    ros::param::get("~move_left1",  move_left_str1);
+    ros::param::get("~move_left2",  move_left_str2);
     ros::param::get("~move_right", move_right_str);
+    ros::param::get("~move_right1", move_right_str1);
+    ros::param::get("~move_right2", move_right_str2);
     ros::param::get("~turn_left",  turn_left_str);
+    ros::param::get("~turn_left1",  turn_left_str1);
+    ros::param::get("~turn_left2",  turn_left_str2);
     ros::param::get("~turn_right", turn_right_str);
+    ros::param::get("~turn_right1", turn_right_str1);
+    ros::param::get("~turn_right2", turn_right_str2);
     ros::param::get("~stop_move",  stop_move_str);
     
     ros::param::get("~back_home", back_home_str);    

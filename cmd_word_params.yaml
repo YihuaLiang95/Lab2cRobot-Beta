@@ -6,15 +6,33 @@
 # History:
 #   20180117: init this file.
 #   20190405: Lab TBSI 2C
+#   20190413: Add
 #
 
 # control move key word
 move_forward: 往前走
+move_forward1: 向前走
+move_forward2: 朝前走
+move_forward3: 往前
+move_forward4: 向前
+move_forward5: 朝前
+move_forward6: 前进
+move_forward7: 上走
 move_back: 后退
+move_back1: 后走
+move_back2: 下走
 move_left: 往左走
+move_left1: 向左走
+move_left2: 朝左走
 move_right: 往右走
+move_right1: 向右走
+move_right2: 朝右走
 turn_left: 往左转
+turn_left1: 向左转
+turn_left2: 朝左转
 turn_right: 往右转
+turn_right1: 向右转
+turn_right2: 朝右转
 stop_move: 停下来
 
 # voice control navigation destination 
