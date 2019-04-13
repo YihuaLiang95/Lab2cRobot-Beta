@@ -20,7 +20,7 @@
         <param name="use_magnetic_field_msg" value="false" />
         <param name="world_frame" value="enu" />
         <param name="orientation_stddev" value="0.05" />
-        <param name="angular_scale" value="2.13" />
+        <param name="angular_scale" value="1.094722222222222222222" />
     </node>
 
 
@@ -30,7 +30,7 @@
 
     <!-- Publish Linorobot odometry -->
     <node pkg="rikirobot" name="riki_base_node" type="riki_base_node">
-    	<param name="linear_scale" type="double" value="1.04" />
+    	<param name="linear_scale" type="double" value="1.0685" />
     </node>
 
     <!-- Publish static transform from base_footprint to base_link -->
