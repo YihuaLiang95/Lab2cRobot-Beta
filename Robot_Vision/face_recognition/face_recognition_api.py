@@ -27,8 +27,12 @@ facenet_meta_path = os.path.join(root_path,"ckpt/facenet/20180402-114759/model-2
 
 class faceNet(object):
     def __init__(self):
+        # GPU options
+        gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5,allow_growth=True)
+        sess_config = tf.ConfigProto(gpu_options=gpu_options)
+
         with tf.Graph().as_default():
-            self.sess = tf.Session()
+            self.sess = tf.Session(config=sess_config)
             # load mtcnn detector
             self.pnet,self.rnet,self.onet = \
                     detect_face.create_mtcnn(self.sess,mtcnn_path)
