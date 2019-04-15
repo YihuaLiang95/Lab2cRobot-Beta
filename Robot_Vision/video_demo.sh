@@ -1,1 +1,1 @@
-python3 video_demo.py --detect_face=True --detect_object=True
+python3 video_demo.py --video_path=0 --detect_object=True

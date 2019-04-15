@@ -2,12 +2,22 @@
 """Receive frames from remote robot camera, process and return.
 """
 import time
+import sys
+sys.path.append("../Robot_Speech")
+import speech_api
 
-import cv2
+try:
+    import cv2
+except:
+    ros_path = '/opt/ros/kinetic/lib/python2.7/dist-packages'
+    if ros_path in sys.path:
+        sys.path.remove(ros_path)
+    import cv2
+    # sys.path.append(ros_path)
+
 import tensorflow as tf 
 import numpy as np 
 import pdb
-import sys
 import os
 
 from cfg.face_config import config as face_config
@@ -17,7 +27,7 @@ from face_recognition.face_recognition_api import faceNet
 from object_detection.tensorflow_yolov3.object_detection_api import YOLOv3
 
 # Define FLAGS
-tf.app.flags.DEFINE_string("video_path","http://10.13.0.235:8080/video",
+tf.app.flags.DEFINE_string("video_path","0",
     "Path of input video stream.")
 
 tf.app.flags.DEFINE_boolean("detect_face",False,
@@ -32,7 +42,7 @@ FLAGS = tf.app.flags.FLAGS
 RESOLUTION = (600,480)
 REMOTE_CAM_IP = "http://10.13.0.235:8080/video"
 
-if FLAGS.video_path == "0":
+if FLAGS.video_path in ["0","1","2","3"]:
     video_capture = cv2.VideoCapture(int(FLAGS.video_path))
 elif FLAGS.video_path != REMOTE_CAM_IP:
     video_capture = cv2.VideoCapture(FLAGS.video_path)
@@ -71,11 +81,12 @@ def main(_):
                 frame,person_name = facenet.detect_face_name_and_draw_box(frame)
                 if len(person_name) > 0:
                     print("Hello, {} !".format(",".join(person_name)))
+                    speech_api.say_hello(person_name,"hello.wav")
                 else:
                     print("No person found!")
-
             else:
                 frame,det_arr = facenet.detect_face_and_draw_box(frame)
+               
         
         # put Text
         fps_info = "FPS: {}".format(f_rate)
@@ -98,6 +109,10 @@ def main(_):
             cv2.namedWindow("Face_Recognition")
             cv2.imshow("Face_Recognition",frame)
             cv2.imwrite("face.jpg",frame)
+            # say hello
+            if len(person_name) > 0:
+                speech_api.say_hello(person_name,"hello.wav")
+
 
         if key == ord("o"):
             # detect objects

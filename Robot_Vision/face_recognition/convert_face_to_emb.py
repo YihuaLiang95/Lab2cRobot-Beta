@@ -8,13 +8,19 @@ refer to: https://github.com/davidsandberg/facenet
 import os
 import pdb
 import time
-
+import sys
 import tensorflow as tf
 import numpy as np
 from scipy import misc
-import cv2
+try:
+    import cv2
+except:
+    ros_path = '/opt/ros/kinetic/lib/python2.7/dist-packages'
+    if ros_path in sys.path:
+        sys.path.remove(ros_path)
+    import cv2
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 from utils import preprocessing
 

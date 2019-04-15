@@ -1,27 +1,28 @@
 # -*- coding: utf-8 -*-
 class Config:
     eng_name_chinese = {
-        "Jiehua":"杰华",
-        "Jielian":"杰廉",
-        "Liangsheng":"良盛",
-        "LinZhang":"professor 张林",
-        "LuLiu":"柳璐",
-        "Shaolun":"professor 绍伦",
-        "Shiv":"Shiv",
-        "Sikai":"思凯",
-        "Wangbin":"王斌",
-        "WangPan":"潘旺",
-        "Weijia":"唯嘉",
-        "Weitao":"伟涛",
-        "Xiangxiang":"祥祥",
-        "Xinyi":"鑫义",
-        "Yida":"义达",
-        "Yihua":"艺铧",
-        "Yuyang":"宇扬",
-        "Zelong":"泽龙",
-        "Zifeng":"子丰",
-        "Unknown":"Unknown",
+        "jiehua":"杰华",
+        "jielian":"杰廉",
+        "liangsheng":"良盛",
+        "linzhang":"professor 张林",
+        "luliu":"柳璐",
+        "shaolun":"professor 绍伦",
+        "shiv":"Shiv",
+        "sikai":"思凯",
+        "wangbin":"王斌",
+        "wangpan":"潘旺",
+        "weijia":"唯嘉",
+        "weitao":"伟涛",
+        "xiangxiang":"祥祥",
+        "xinyi":"鑫义",
+        "yida":"义达",
+        "yihua":"艺铧",
+        "yuyang":"宇扬",
+        "zelong":"泽龙",
+        "zifeng":"子丰",
+        "unknown":"我好像不认识你呢",
     }
+    hello_list = ["Hello,","你好,","牛批,","优秀","你好6啊,6,6,6,","加油,给自己打个气,"]
 
 config = Config()
 

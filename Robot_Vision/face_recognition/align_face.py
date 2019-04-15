@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Written by Zifeng
 # wangzf18@mails.tsinghua.edu.cn
-
 "Align faces from raw images."
 from __future__ import absolute_import
 from __future__ import division

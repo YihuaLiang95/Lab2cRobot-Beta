@@ -1,6 +1,7 @@
 # Call KeDaXunFei webAPI to say hello.
 # -*- coding: utf-8 -*-
 from config import config
+import random
 
 import base64
 import json
@@ -11,13 +12,21 @@ import pdb
 import os
 
 def say_hello(name,output_file="hello.wav"):
-    chinese_name = config.eng_name_chinese[name]
+    """Given detected name, say hello.
+    
+    Args:
+        name: a list of names ["a","b","c",...]
+    """
+    chinese_name = []
+    for a in name:
+        chinese_name.append(config.eng_name_chinese[a.lower()])
     # get audio and play it
-    get_audio(chinese_name,output_file)
+    get_audio(",".join(chinese_name),output_file)
     play_audio(output_file)
     return 
 
 def play_audio(filename):
+    # pdb.set_trace()
     os.system("play {}".format(filename))
     return
 
@@ -27,7 +36,8 @@ def get_audio(name,output_file="hello.wav"):
     API_KEY = "5005e56df6e81f885a9a9e938e06c2ae"
     APP_ID = "5cb43391"
     OUTPUT_FILE = output_file   # 输出音频的保存路径，请根据自己的情况替换
-    TEXT = "Hello, {} !".format(name)
+    # TEXT = "Hello, {} !".format(name)
+    TEXT = "{} {}!".format(config.hello_list[random.randint(0,len(config.hello_list)-1)],name)
     VOICE = "xiaoyan"
 
     # 构造输出音频配置参数
@@ -79,7 +89,7 @@ def get_audio(name,output_file="hello.wav"):
     return OUTPUT_FILE
 
 def main():
-
+    say_hello("Zifeng","hello.wav")
     # print(config.eng_name_chinese["Zifeng"])
     return
 
