@@ -1,9 +1,7 @@
 # Zelong Yang's work
 List the work done and to be done week by week.
    # 1. Week 3 and 4</br>
-   '''
      Doing the contacting work with Jinzheng Company and Siemens company. After consulting, we decided not to do the internet of things module temporarily. Then I joined the motion group.
-   '''
    # 2. Week 5</br>
    ```
      Wrote a function to directly control the motion of the robot using command streams (like 'forward', 'forward', ...) instead of the keyboard control.
