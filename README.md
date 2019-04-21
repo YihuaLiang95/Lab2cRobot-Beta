@@ -13,3 +13,5 @@ List the work done and to be done week by week.
    Added more synonym voice command so that the voice control function would be more roubustic to error voice recognition.
    # 5. Week 8</br>
    Arranged the codes in the github.
+   
+   Voiceprint module
