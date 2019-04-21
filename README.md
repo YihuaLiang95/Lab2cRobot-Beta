@@ -11,7 +11,7 @@ List the work done and to be done week by week.
    # 4. Week 7</br>
    Calibrated the linear velocity and the angular velocity precisely using rular and protractor. After calibration the angular error decreased from 10° to 4° and the linear error decreased about 5%.
    Added more synonym voice command so that the voice control function would be more roubustic to error voice recognition.
-   # 5. Week 8</br>
+   # 5. Week 8 and 9</br>
    Arranged the codes in the github.
    
    Voiceprint module
