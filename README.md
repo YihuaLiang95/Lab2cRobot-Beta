@@ -14,7 +14,7 @@ List the work done and to be done week by week.
    # 5. Week 8 and 9</br>
    Arranged the codes in the github.
    
-   Colabrated with Yihua Liang: built the voiceprint module, which recognize voice and tell the name of the speaker.
+   Colabrated with Yihua Liang: built the voiceprint module, which recognizes the voice and tell the name of the speaker.
    The voiceprint module includes three parts: voice recording, voice recognizing and speech synthesis.
    
    Implemented the voiceprint module into the voice module, so we can turn on the voiceprint module using voice command.
