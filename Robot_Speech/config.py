@@ -22,7 +22,7 @@ class Config:
         "zifeng":"子丰",
         "unknown":"我好像不认识你呢",
     }
-    hello_list = ["Hello,","你好,","牛批,","优秀","你好6啊,6,6,6,","加油,给自己打个气,"]
+    hello_list = ["Hello,","你好,","牛批,","优秀","你好6啊,六六六,","加油,给自己打个气,"]
 
 config = Config()
 
