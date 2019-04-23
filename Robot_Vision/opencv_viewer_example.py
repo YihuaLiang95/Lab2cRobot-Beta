@@ -48,9 +48,6 @@ try:
         # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
         depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
         
-        # Save images
-        depth_images.append(depth_image)
-        depth_colormaps.append(depth_colormap)
 
         # Stack both images horizontally
         images = np.hstack((color_image, depth_colormap))
@@ -58,8 +55,14 @@ try:
         # Show images
         cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('RealSense', images)
-        cv2.waitKey(1)
-        idx += 1
+        k = cv2.waitKey(1)
+        if k == ord("f"):
+            # Save images
+            print("save one image.")
+            depth_images.append(depth_image)
+            depth_colormaps.append(depth_colormap)
+            idx += 1
+
         if idx > MAX_IMAGES:
             saved_sample = {"image":depth_images,"colormap":depth_colormaps}
             np.save("depth_images.npy",saved_sample)
