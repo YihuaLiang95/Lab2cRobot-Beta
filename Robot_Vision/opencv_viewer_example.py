@@ -27,8 +27,9 @@ config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 # Start streaming
 pipeline.start(config)
 
+depth_colormaps = []
 depth_images = []
-MAX_IMAGES = 10
+MAX_IMAGES = 5
 idx = 0
 try:
     while True:
@@ -46,7 +47,10 @@ try:
 
         # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
         depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
-        depth_images.append(depth_colormap)
+        
+        # Save images
+        depth_images.append(depth_image)
+        depth_colormaps.append(depth_colormap)
 
         # Stack both images horizontally
         images = np.hstack((color_image, depth_colormap))
@@ -57,7 +61,8 @@ try:
         cv2.waitKey(1)
         idx += 1
         if idx > MAX_IMAGES:
-            np.save("depth_images.npy",depth_images)
+            saved_sample = {"image":depth_images,"colormap":depth_colormaps}
+            np.save("depth_images.npy",saved_sample)
             break
 
 finally:
