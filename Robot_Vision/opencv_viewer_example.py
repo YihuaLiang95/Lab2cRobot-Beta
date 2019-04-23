@@ -7,6 +7,8 @@
 import sys
 import pyrealsense2 as rs
 import numpy as np
+import pdb
+
 try:
     import cv2
 except:
@@ -25,6 +27,9 @@ config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 # Start streaming
 pipeline.start(config)
 
+depth_images = []
+MAX_IMAGES = 10
+idx = 0
 try:
     while True:
 
@@ -41,6 +46,7 @@ try:
 
         # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
         depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
+        depth_images.append(depth_colormap)
 
         # Stack both images horizontally
         images = np.hstack((color_image, depth_colormap))
@@ -49,6 +55,10 @@ try:
         cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('RealSense', images)
         cv2.waitKey(1)
+        idx += 1
+        if idx > MAX_IMAGES:
+            np.save("depth_images.npy",depth_images)
+            break
 
 finally:
 
