@@ -1,59 +1,51 @@
-# Lab2cRobot-Beta
-This repository is just for test</br>
-   # 1. Download git bash</br>
-   # 2. Config your github account and github email by</br>
-   ```
-     git config --global user.name:yourusername
-     git config --global user.email:youremail   
-   ```
-   "--global" means this account will be used for all git repo on this computer. </br>
-   # 3. generate ssh key by</br>
-   ```
-   cd ~/.ssh
-   ssh-keygen -t rsa -C "your_email@example.com"
-   ```
-   I suggest you naming the file that restore the key as "id_rsa"</br>  
-   # 4. Try</br>
-   ```
-   ssh -T git@github.com
-   ```
-   If you see "Hi yourname You've successfully authenticated, but GitHub does not provide shell access. ",
-   you are connected to Github now.</br>
-   # 5. Use ```git clone 'git@github:repositeryname' ``` to clone this repo to your laptop</br>
-   You can find relative link which should be in '' by clicking the button "clone or download". </br>
-   # 6. After succeesfully clone
-   You can use  
-   ```cd Lab2cRobot-Beta``` switch to the repositery(master branch). Just tap "lab" and press "tab", git bash will complete it</br>
-   To keep code in master branch always work, please create and work on a new branch.
-   ```git branch new branch``` Creat a new branch
-   ```git checkout branchname``` Switch to a branch
-   ```git checkout -b new_branch_ha``` Creat and switch to the new branch
-   # 7. Add, commit, push and pull. 
-   At the first time you will creat a branch and work on it. 
-   During your work, you can use ```git add``` to save your to Staged(now your work is in working directory).</br>
-   ```git add .``` will save new files and modified files, but not deleted files.</br>
-   ```git add -u``` will save new files and deleted files, but not modified files.</br>
-   ```git add -A``` will save all changes.</br>
-   ```git add filename``` will add specific files.</br> 
-   ```git status``` can show you status of your files.</br>
-   'Untracked' means files are in work directory and not tracked by git. After ```git add```, they will become 'modified'</br>
-   'Staged' means files are staged but not submit to remote repositery.</br>
-   Use ``` git commit -m "message"``` to submit staged changes to repositery.</br>
-   After you finish your work, use ```git push origin yourbranchname ``` to send it Our repositery.</br>  
-   When you want to commit, make sure you have finished at least one function or a method.</br>
-   When you want to commit, make sure all jobs have been done and their is no bug.</br>
-   </br>
-   To your branch from remote repo, use ```git pull origin branchname```. 
-   # 8. Merge 
-   Don't merge branches by yourself. Please use Issue in github to request merge. </br>
-   nner-group branches should first be merged by group leaders and Yihua will take care of merge of inter-group branches.</br>
-   First switch to the branch you want to keep, then use</br>
-   ```git merge branchname``` to merge branches.
-   # 9. Merge conflicts
-   Merge conflicts will appear when git fail to figure out which version of codes you want to save.</br>
-   It means codes in repositery is different from what you pull from it.
-   
-   # Finally, Google or Baidu when things go wrong.
+# Simple Tutorial to Laser_filter
 
-   # Tip. Usage on git command
-   You can check the ** git-cheatsheet.pdf ** for common git command
+This tutorial is for the basic utilization of ROS pacakage laser_filter.
+
+## 1. Download, and install laser_filter in your ros platform
+
+## 2.Write a .launch for the desired filter
+Basically, according to [the wiki of laser filters](http://wiki.ros.org/laser_filters), you could modify a template .yaml which stores parameters to meet your own need as follows:
+
+
+my_laser_config.yaml:
+
+```
+scan_filter_chain:
+- name: unique_name1
+  type: LaserFilterClass1
+  params:
+    param1: a
+    param2: b
+- name: unique_name2
+  type: LaserFilterClass2
+  params:
+    param1: a
+    param2: b
+```
+
+
+
+## 3. Modify related nodes 
+
+To suceesfully substitute laser data with filtered  laser data, you also need to remap the topic arguments (detalis have been illustrated [Remapping Arguments](http://wiki.ros.org/Remapping%20Arguments) and [remap](http://wiki.ros.org/roslaunch/XML/remap)) Here we adpot the second way, i.e, add a new line in the head of launch file to replace the orginal /scan topic with /scan_filtered topic. An example is as follows, a new line has been add on the second line.
+
+```
+<launch>
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <remap from="scan" to="scan_filtered" />
+    <rosparam file="$(find rikirobot)/param/navigation/$(env RIKIBASE)/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find rikirobot)/param/navigation/$(env RIKIBASE)/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find rikirobot)/param/navigation/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find rikirobot)/param/navigation/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find rikirobot)/param/navigation/$(env RIKIBASE)/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find rikirobot)/param/navigation/move_base_params.yaml" command="load" />
+  </node>
+</launch>
+               
+```
+
+## 4. Some further tips
+
+1. You could also combine such a filter into your origial launcah file, so that no additional step to turn on the filter is needed.
+2. In order to determine which node subscribe to /scan topic, you could use command line rosnode as well as rostopic to check the relationship between your insterested node and /scan topic.
