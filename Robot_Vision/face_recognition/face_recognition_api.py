@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Provide face-recognition API to access.
 """
-# -*- coding: utf-8 -*-
 
 import os
 import pdb

@@ -85,7 +85,7 @@ for colormap,depth_img in zip(colormaps,depth_images):
     # im.show()
 
     # save drawn contours images
-    cv2.drawContours(raw_img,hulls,-1,(0,255,0),3)
+    cv2.drawContours(raw_img,hulls,-1,(255,0,0),3)
     hull_im = Image.fromarray(raw_img)
     hull_im.save(os.path.join(SAVE_DIR,"{}_hull.jpg".format(f_count)))
 

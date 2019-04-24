@@ -6,7 +6,7 @@ The present work has concluded face recognition and object detection, u can use
 
 `python3 video_demo.py --viedo_path=0 --detect_face=True --detect_object=True`
 
-to use both of them, or run `sh video_demo.sh` to use remote IP camera.
+to use both of them, or run `sh ip_camera_demo.sh` to use remote IP camera.
 
 For fast video processing, the interval that frame is being processed is set in
 
@@ -44,31 +44,55 @@ Samely when `--detect_object=True`, you may press bottom **o** to caputre one fr
 
 - [x] **Object detection**
 
-  Assist the robot SLAM, doing route planning.
+  Detect multiple common objects on each frame.
+
+- [x] **Obstacle detection via depth image**
+
+  Detect obstacles on depth image collected by the Intel realsense with fast opencv approach.
 
   
 
 ## 2. Further tasks
 
-### 1. Face recognition
+### Face recognition
 
-- [ ] **Less frames for face verification**
+- [x] **Less frames for face verification**
 
   We only need several frames to do face verification instead of real-time capturing.
 
-### 2. Single object tracking
+- [ ] **Face detection with speech interaction**
+
+  The robot says hello while confronting guys. We further need an speech activation module, like say hello to the robot then it will respond.
+
+- [ ] **Robust face verification regarding to luminance**
+
+  The current face detection is highly influenced by luminance which deteriorates the accuracy dramatically. 
+
+- [ ] **Living face verification**
+
+  The model cannot discriminate the living face and faces on a display or a paper.
+
+### Single object tracking
 
 - [ ] **More robust object tracking**
 
-  Achieve more robust single object tracking, e.g. **SiamMask**.
+  Achieve more robust single object tracking, e.g. SiamMask.
 
-### 3. Object detection
+### Object detection
 
-- [ ] **Build our own dataset**
+- [ ] **Build our own dataset and fine-tune**
 
-  Collect images from Intelligence Park 15th floor and build PASCAL VOC like dataset.
+  Collect images from Intelligence Park 15th floor and build PASCAL VOC like dataset and try to fine-tune them on YOLO-v3 model.
 
-- [ ] **Fine-tune on collected dataset**
+### Obstacle avoiding
 
-  Try on advanced object detection model on collected images, e.g. **YOLO v3**.
+- [ ] **Eliminate the ground**
+
+  Current model cannot remove ground parts from the raw images, which makes it not practical for obstacle avoiding.
+
+- [ ] **Make it an API to access**
+
+  An API will be built based on this module for its further application on SLAM.
+
+
 
