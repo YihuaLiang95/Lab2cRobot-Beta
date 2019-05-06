@@ -72,7 +72,7 @@ def main():
             # Stack both images horizontally
             images = np.hstack((color_image, depth_colormap))
 
-            od_image = od.detect_and_raw_contours(color_image,depth_image)
+            od_image = od.detect_and_draw_contours(color_image,depth_image)
 
             # Show real time video
             cv2.imshow('RealSense', images)

@@ -40,7 +40,6 @@ class ObstacleDetector(object):
 
         # mask colormap with distance threshold
         img = mask_depth(colormap,depth_image,config.distance_thres)
-        pdb.set_trace()
         # opening
         img = opening(img,config.open_kernel)
 
