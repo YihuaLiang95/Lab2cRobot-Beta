@@ -4,9 +4,18 @@
 
 import os
 import pdb
-import numpy as np 
+import numpy as np
+import sys
 
-import cv2
+try:
+    import cv2
+except:
+    ros_path = '/opt/ros/kinetic/lib/python2.7/dist-packages'
+    if ros_path in sys.path:
+        sys.path.remove(ros_path)
+    import cv2
+    # sys.path.append(ros_path)
+
 from PIL import Image
 
 from cfg.config import config

@@ -27,8 +27,10 @@ config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 # Start streaming
 pipeline.start(config)
 
+rgb_images = []
 depth_colormaps = []
 depth_images = []
+
 MAX_IMAGES = 5
 idx = 0
 try:
@@ -59,12 +61,14 @@ try:
         if k == ord("f"):
             # Save images
             print("save one image.")
+            rgb_images.append(color_image)
             depth_images.append(depth_image)
             depth_colormaps.append(depth_colormap)
             idx += 1
 
         if idx > MAX_IMAGES:
-            saved_sample = {"image":depth_images,"colormap":depth_colormaps}
+            saved_sample = {"image":depth_images,"colormap":depth_colormaps,
+                "rgb":rgb_images}
             np.save("depth_images.npy",saved_sample)
             break
 
