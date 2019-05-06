@@ -48,16 +48,17 @@ How to eliminate the ground is the core challenge in this module, since the grou
 
 The depth image is not aligned with the rgb image actually, shown as follow:
 
-![](demo/compare_rgb_depth.jpg)
+![](demo/no_align_rgb_depth.jpg)
 
 It can be seen that these two images are not aligned, the left hand side chair seems "closer" than the right hand side one. Unless make these two images aligned, we cannot do obstacle detection based on the depth image and give correct geographical information of the obstacle on the rgb image.
 
 A mixture of above two images demonstrates this difference significantly:
 
-![](demo/mix_rgb_depth.jpg)
+![](demo/no_align_mix_rgb_depth.jpg)
 
 
 
 #### **Solutions**
 
-- 
+![](demo/align_rgb_depth.jpg)
+![](demo/align_mix_rgb_depth.jpg)
