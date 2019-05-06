@@ -65,12 +65,26 @@ def main():
     depth_samples = np.load("depth_images.npy").item()
     colormaps = depth_samples["colormap"]
     depth_images = depth_samples["image"]
+    rgb_images = depth_samples["rgb"]
 
     # get a sample
     colormap = colormaps[5]
     depth_image = depth_images[5]
+    rgb_image = rgb_images[5]
 
     colormap = cv2.cvtColor(colormap,cv2.COLOR_BGR2RGB)
+    colormap_gray = cv2.cvtColor(colormap,cv2.COLOR_RGB2GRAY)
+    gray = cv2.cvtColor(rgb_image,cv2.COLOR_RGB2GRAY)
+    rgb_depth = np.concatenate((colormap,rgb_image),axis=1)
+    im = Image.fromarray(rgb_depth)
+    im.save("demo/compare_rgb_depth.jpg")
+    im.show()
+
+    mix = cv2.addWeighted(gray,0.5,colormap_gray,0.5,0)
+    im = Image.fromarray(mix)
+    im.save("demo/mix_rgb_depth.jpg")
+    im.show()
+
     image = od.detect_and_draw_contours(colormap,depth_image)
     im = Image.fromarray(image)
     im.save("demo/5_hull_crop.jpg")
