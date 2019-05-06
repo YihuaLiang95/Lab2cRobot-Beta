@@ -18,3 +18,5 @@ List the work done and to be done week by week.
    The voiceprint module includes three parts: voice recording, voice recognizing and speech synthesis.
    
    Implemented the voiceprint module into the voice module, so we can turn on the voiceprint module using voice command.
+   # 6. Week 11</br>
+   Planning to build the communication interface to automaticly update the file onto the server.
