@@ -40,7 +40,7 @@ class ObstacleDetector(object):
 
         # mask colormap with distance threshold
         img = mask_depth(colormap,depth_image,config.distance_thres)
-
+        pdb.set_trace()
         # opening
         img = opening(img,config.open_kernel)
 
@@ -69,26 +69,37 @@ def main():
 
     # get a sample
     colormap = colormaps[5]
+    colormap = cv2.cvtColor(colormap,cv2.COLOR_BGR2RGB)
     depth_image = depth_images[5]
     rgb_image = rgb_images[5]
 
-    colormap = cv2.cvtColor(colormap,cv2.COLOR_BGR2RGB)
-    colormap_gray = cv2.cvtColor(colormap,cv2.COLOR_RGB2GRAY)
-    gray = cv2.cvtColor(rgb_image,cv2.COLOR_RGB2GRAY)
-    rgb_depth = np.concatenate((colormap,rgb_image),axis=1)
-    im = Image.fromarray(rgb_depth)
-    im.save("demo/compare_rgb_depth.jpg")
-    im.show()
+    mix = np.concatenate((colormap,rgb_image),axis=1)
+    Image.fromarray(mix).show()
 
-    mix = cv2.addWeighted(gray,0.5,colormap_gray,0.5,0)
-    im = Image.fromarray(mix)
-    im.save("demo/mix_rgb_depth.jpg")
-    im.show()
+    # pdb.set_trace()
 
-    image = od.detect_and_draw_contours(colormap,depth_image)
+    image = od.detect_and_draw_contours(rgb_image,depth_image)
     im = Image.fromarray(image)
     im.save("demo/5_hull_crop.jpg")
-    im.show()
+    im.show()   
+
+
+    # colormap_gray = cv2.cvtColor(colormap,cv2.COLOR_RGB2GRAY)
+    # gray = cv2.cvtColor(rgb_image,cv2.COLOR_RGB2GRAY)
+    # rgb_depth = np.concatenate((colormap,rgb_image),axis=1)
+    # im = Image.fromarray(rgb_depth)
+    # im.save("demo/compare_rgb_depth.jpg")
+    # im.show()
+
+    # mix = cv2.addWeighted(gray,0.5,colormap_gray,0.5,0)
+    # im = Image.fromarray(mix)
+    # im.save("demo/mix_rgb_depth.jpg")
+    # im.show()
+
+    # image = od.detect_and_draw_contours(colormap,depth_image)
+    # im = Image.fromarray(image)
+    # im.save("demo/5_hull_crop.jpg")
+    # im.show()
     
     # pdb.set_trace()
 

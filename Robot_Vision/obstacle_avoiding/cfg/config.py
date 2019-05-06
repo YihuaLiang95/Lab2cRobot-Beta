@@ -1,7 +1,7 @@
 class Config(object):
 
     # objects more distant than this will be eliminated
-    distance_thres = 1300
+    distance_thres = 1000
     
     # objects smaller than this area will be eliminated
     min_area = 1400

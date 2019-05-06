@@ -60,5 +60,9 @@ A mixture of above two images demonstrates this difference significantly:
 
 #### **Solutions**
 
+Calibrate the depth image with the rgb image:
+
+
+
 ![](demo/align_rgb_depth.jpg)
 ![](demo/align_mix_rgb_depth.jpg)
