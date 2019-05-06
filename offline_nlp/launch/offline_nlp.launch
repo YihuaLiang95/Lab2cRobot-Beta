@@ -1,0 +1,16 @@
+<launch>
+  <arg name="NLU_Topic" />
+  <arg name="TTS_Topic" />
+  <arg name="MOVE_Topic" />
+  <arg name="NAV_Topic" />
+  <arg name="config_file" default="$(find offline_nlp)/config/cmd_word_params.yaml"/>
+
+  <node pkg="offline_nlp" type="offline_nlp_node" name="offline_nlp_node" respawn="true" output="screen">
+    <rosparam file="$(arg config_file)" command="load" />
+
+    <param name="nlu_topic"  value="$(arg NLU_Topic)" />
+    <param name="tts_topic"  value="$(arg TTS_Topic)" />
+    <param name="move_topic" value="$(arg MOVE_Topic)" />
+    <param name="nav_topic"  value="$(arg NAV_Topic)" />
+  </node>
+</launch>

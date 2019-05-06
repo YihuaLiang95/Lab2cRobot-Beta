@@ -1,0 +1,10 @@
+<launch>
+  <arg name="ASR_Topic" />
+  <arg name="NLU_Topic" />
+
+  <node pkg="offline_asr" type="offline_asr.py" name="offline_asr_node" output="screen">
+    <param name="asr_topic" value="$(arg ASR_Topic)" />
+    <param name="nlu_topic" value="$(arg NLU_Topic)" />
+    
+  </node>
+</launch>

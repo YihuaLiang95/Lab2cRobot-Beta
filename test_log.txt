@@ -1,0 +1,149 @@
+tbsi2c@tbsi2c-ThinkPad-X250:~$ roslaunch voice_bringup_offline voice_bringup_offline.launch
+... logging to /home/tbsi2c/.ros/log/3af2d294-6fde-11e9-b2d4-4c348884c358/roslaunch-tbsi2c-ThinkPad-X250-26495.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+
+started roslaunch server http://192.168.102.81:41349/
+
+SUMMARY
+========
+
+PARAMETERS
+ * /audio_capture/channels: 1
+ * /audio_capture/depth: 16
+ * /audio_capture/format: wave
+ * /audio_capture/sample_rate: 16000
+ * /iflytek_tts_node/app_id: 5ca9e9c9
+ * /iflytek_tts_node/greet_word: <...>
+ * /iflytek_tts_node/speaker_name: babyxu
+ * /iflytek_tts_node/tts_topic: /voice_system/tts...
+ * /iflytek_tts_node/voice_speed: 50
+ * /offline_asr_node/asr_topic: /voice_system/asr...
+ * /offline_asr_node/nlu_topic: /voice_system/nlu...
+ * /offline_nlp_node/back_home: <...>
+ * /offline_nlp_node/go_away: <...>
+ * /offline_nlp_node/move_back: <...>
+ * /offline_nlp_node/move_forward: <...>
+ * /offline_nlp_node/move_left: <...>
+ * /offline_nlp_node/move_right: <...>
+ * /offline_nlp_node/move_topic: /voice_system/mov...
+ * /offline_nlp_node/nav_topic: /voice_system/nav...
+ * /offline_nlp_node/nlu_topic: /voice_system/nlu...
+ * /offline_nlp_node/stop_move: <...>
+ * /offline_nlp_node/tts_topic: /voice_system/tts...
+ * /offline_nlp_node/turn_left: <...>
+ * /offline_nlp_node/turn_right: <...>
+ * /rosdistro: kinetic
+ * /rosversion: 1.12.14
+ * /snowboy/asr_topic: /voice_system/asr...
+ * /snowboy/audio_gain: 1.0
+ * /snowboy/model_filename: <...>
+ * /snowboy/publish_wave: False
+ * /snowboy/resource_filename: /home/tbsi2c/riki...
+ * /snowboy/sensitivity_str: 0.5
+ * /voice_move_node/default_speed_x: 0.2
+ * /voice_move_node/default_speed_y: 0.2
+ * /voice_move_node/default_turn_speed: 0.5
+ * /voice_move_node/pub_move_topic: /cmd_vel
+ * /voice_move_node/sub_move_topic: /voice_system/mov...
+
+NODES
+  /
+    audio_capture (audio_capture/audio_capture)
+    iflytek_tts_node (iflytek_tts/iflytek_tts_node)
+    offline_asr_node (offline_asr/offline_asr.py)
+    offline_nlp_node (offline_nlp/offline_nlp_node)
+    save_response_node (save_response/save_response.py)
+    snowboy (snowboy_wakeup/hotword_detector_node)
+    voice_move_node (voice_move/voice_move_node)
+
+auto-starting new master
+process[master]: started with pid [26512]
+ROS_MASTER_URI=http://192.168.102.81:11311
+
+setting /run_id to 3af2d294-6fde-11e9-b2d4-4c348884c358
+process[rosout-1]: started with pid [26525]
+started core service [/rosout]
+process[audio_capture-2]: started with pid [26542]
+/opt/ros/kinetic/lib/python2.7/dist-packages/roslib/packages.py:447: UnicodeWarning: Unicode equal comparison failed to convert both arguments to Unicode - interpreting them as being unequal
+  if resource_name in files:
+process[snowboy-3]: started with pid [26543]
+process[offline_asr_node-4]: started with pid [26544]
+process[offline_nlp_node-5]: started with pid [26562]
+process[iflytek_tts_node-6]: started with pid [26579]
+process[voice_move_node-7]: started with pid [26594]
+process[save_response_node-8]: started with pid [26602]
+login_params: appid = 5ca9e9c9, work_dir = .
+session_begin_params:voice_name = babyxu, text_encoding = utf8, sample_rate = 16000, speed = 50, volume = 80, pitch = 50, rdn = 0
+语音开始合成 ...
+[INFO] [1557133589.207597]: Now ready to save response...
+Initialization
+>>>>>>>>>>>>>>
+合成完毕
+
+say.wav:
+
+ File Size: 34.0k     Bit Rate: 256k
+  Encoding: Signed PCM    
+  Channels: 1 @ 16-bit   
+Samplerate: 16000Hz      
+Replaygain: off         
+  Duration: 00:00:01.06  
+
+In:100%  00:00:01.06 [00:00:00.00] Out:17.0k [      |      ] Hd:2.6 Clip:0    
+Done.
+
+/home/tbsi2c/Music/wakeup_alert.mp3:
+
+ File Size: 3.97k     Bit Rate: 33.8k
+  Encoding: MPEG audio    
+  Channels: 2 @ 16-bit   
+Samplerate: 11025Hz      
+Replaygain: off         
+  Duration: 00:00:00.94  
+
+In:100%  00:00:00.94 [00:00:00.00] Out:10.4k [      |      ] Hd:0.0 Clip:0    
+Done.
+[INFO] [1557133594.257207]: Now in Offline ASR Callback function...
+ALSA lib pcm_dsnoop.c:606:(snd_pcm_dsnoop_open) unable to open slave
+ALSA lib pcm_dmix.c:1029:(snd_pcm_dmix_open) unable to open slave
+ALSA lib pcm.c:2266:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.rear
+ALSA lib pcm.c:2266:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.center_lfe
+ALSA lib pcm.c:2266:(snd_pcm_open_noupdate) Unknown PCM cards.pcm.side
+ALSA lib pcm_dmix.c:1029:(snd_pcm_dmix_open) unable to open slave
+('**********', 'Start recording: Input audio in 5 seconds')
+('**********', 'End recording')
+start recognize
+['<s>', '\xe5\x90\x91\xe5\x8f\xb3\xe8\xbd\xac']
+Detailed segments:
+('<s>', 0, 140, 147)
+('\xe5\x90\x91\xe5\x8f\xb3\xe8\xbd\xac', 0, 148, 312)
+向右转
+-3860
+-4938
+0.679740108354
+('\xe5\x90\x91\xe5\x8f\xb3\xe8\xbd\xac', -793)
+('\xe5\x90\x91\xe5\x8f\xb3\xe8\xbd\xac', -767307)
+ASR 
+[INFO] [1557133601.528986]: 向右转
+[INFO] [1557133601.529662]: Get asr response: 向右转
+offline_nlu_node get input is:向右转
+[ INFO] [1557133601.612839418]: offline_nlu_node get parseInputString return: 1
+^C[save_response_node-8] killing on exit
+[voice_move_node-7] killing on exit
+[iflytek_tts_node-6] killing on exit
+[offline_nlp_node-5] killing on exit
+[offline_asr_node-4] killing on exit
+[snowboy-3] killing on exit
+[audio_capture-2] killing on exit
+Unhandled exception in thread started by 
+sys.excepthook is missing
+lost sys.stderr
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+done
+tbsi2c@tbsi2c-ThinkPad-X250:~$ 
+
