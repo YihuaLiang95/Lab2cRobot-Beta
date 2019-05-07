@@ -19,4 +19,5 @@ List the work done and to be done week by week.
    
    Implemented the voiceprint module into the voice module, so we can turn on the voiceprint module using voice command.
    # 6. Week 11</br>
-   Planning to build the communication interface to automaticly update the file onto the server.
+   Built the communication interface to automaticly update the file onto the server. The usages are as follows:
+   First put the file upload.py into the same directory of the conducting python file, then add "import upload" in the conducting file. Use upload_file(file_path,file_name) to upload the local file into the robot's server account. file_path and file_name are the path and the name of the file to be uploaded. The file will be uploaded into the server account "robot", whose password is "roborocks".
