@@ -40,10 +40,6 @@ How to eliminate the ground is the core challenge in this module, since the grou
 
 
 
-- Use machine learning to do segmentation on the ground, classifying pixels belonging to the ground.
-
-  
-
 ### B. Calibration
 
 The depth image is not aligned with the rgb image actually, shown as follow:
@@ -90,9 +86,14 @@ Do obstacle detection based on its outer boundary, getting good result:
 
 
 
+### D. Route planning
+
+After the contour of obstacles are detected, the key challenge lies on how to make use of it to do route planning for the robot.
 
 
 
+### E. Moving objects
 
+In real-time obstacle avoiding, the video stream contains not only static object location but also the movement of objects. Thus a model can be built to estimate and predict the objects moving speed and direction.
 
-
+**TODO**
