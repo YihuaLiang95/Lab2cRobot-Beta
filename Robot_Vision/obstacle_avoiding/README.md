@@ -65,4 +65,34 @@ Calibrate the depth image with the rgb image:
 
 
 ![](demo/align_rgb_depth.jpg)
+
 ![](demo/align_mix_rgb_depth.jpg)
+
+
+
+### C. Contour error
+
+Find only the outer boundary of the chair caused by errors happened in the realsense depth camera due to environmental influences, which causes lost detection of the chair:
+
+![](demo/error_contour.jpg)
+
+
+
+![](demo/loss_chair.jpg)
+
+
+
+#### Solution
+
+Do obstacle detection based on its outer boundary, getting good result:
+
+![](demo/get_chair.jpg)
+
+
+
+
+
+
+
+
+

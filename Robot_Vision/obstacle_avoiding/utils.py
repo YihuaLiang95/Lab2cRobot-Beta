@@ -19,7 +19,7 @@ def opening(colormap,open_kernel):
     return opening
 
 def binary(colormap):
-    ret,bi_img = cv2.threshold(colormap,127,255,cv2.THRESH_BINARY)
+    ret,bi_img = cv2.threshold(colormap,1,255,cv2.THRESH_BINARY)
     return bi_img
 
 def find_contour(colormap,min_area):

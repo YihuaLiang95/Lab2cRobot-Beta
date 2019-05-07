@@ -40,6 +40,7 @@ class ObstacleDetector(object):
 
         # mask colormap with distance threshold
         img = mask_depth(colormap,depth_image,config.distance_thres)
+
         # opening
         img = opening(img,config.open_kernel)
 
@@ -73,10 +74,6 @@ def main():
     rgb_image = rgb_images[5]
 
     mix = np.concatenate((colormap,rgb_image),axis=1)
-    Image.fromarray(mix).show()
-
-    # pdb.set_trace()
-
     image = od.detect_and_draw_contours(rgb_image,depth_image)
     im = Image.fromarray(image)
     im.save("demo/5_hull_crop.jpg")
