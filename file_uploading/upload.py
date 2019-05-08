@@ -46,7 +46,7 @@ def check_file(local_path, ssh_path, ssh1, sftp1):
 			return 1
  
 # 上传流程开始
-def upload_file(file_path,file_name,target_path='//home//robot//uploadtest//',hostname='10.8.4.170',port=22,username='robot',password='roborocks'):
+def upload_file(file_path,file_name,target_path='//home//robot//',hostname='10.8.4.170',port=22,username='robot',password='roborocks'):
     # 配置属性
     config = {
     	#本地项目路径 待上传文件所在的文件夹
