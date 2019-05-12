@@ -5,9 +5,14 @@ command = "test command"
 command_name = "测试命令"
 command_list = command.split(' ')
 
+file_path1 = '//home//tbsi2c//rikirobot_audio//lucky13//ros_voice_system//src//tuling_nlu//config//cmd_word_params.yaml'
+file_path2 = '//home//tbsi2c//rikirobot_audio//lucky13//ros_voice_system//src//tuling_nlu//src//tuling_nlu.cpp'
+file_path3 = '//home//tbsi2c//rikirobot_audio//lucky13//ros_voice_system//src//voice_move//src//voice_move.cpp'
+file_path4 = '//home//tbsi2c//catkin_ws//src//rikirobot_project//rikirobot//script//riki_patrol_nav.py'
+
 
 #file1: cmd_word_params.yaml
-with open('cmd_word_params.yaml',"rt",encoding = 'utf-8') as f:
+with open(file_path1,"rt",encoding = 'utf-8') as f:
     content=f.readlines()
     tab_record = -1
     i_record = -1
@@ -29,14 +34,14 @@ with open('cmd_word_params.yaml',"rt",encoding = 'utf-8') as f:
     for string in command_list[:-1]:
         insert = insert+string+'_'
     insert = insert+command_list[-1]+": "+command_name+"\n"
-    with open("cmd_word_params1.yaml","wt") as f:
+    with open(file_path1,"wt") as f:
         content=content[:i_record]+[insert]+content[i_record:]
         f.writelines(content)
         f.close()
 
         
 #file2: tuling_nlu.cpp
-with open('tuling_nlu.cpp',"rt") as f:
+with open(file_path2,"rt") as f:
     content=f.readlines()
     tab_record = -1
     i_record = -1
@@ -52,12 +57,12 @@ with open('tuling_nlu.cpp',"rt") as f:
     for string in command_list[:-1]:
         insert = insert+string+'_'
     insert = insert+command_list[-1]+"_str;\n"
-    with open("tuling_nlu1.cpp","wt") as f:
+    with open(file_path2,"wt") as f:
         content=content[:i_record]+[insert]+content[i_record:]
         f.writelines(content)
         f.close()
 
-with open('tuling_nlu1.cpp',"rt") as f:
+with open(file_path2,"rt") as f:
     content=f.readlines()
     tab_record = -1
     i_record = -1
@@ -83,12 +88,12 @@ with open('tuling_nlu1.cpp',"rt") as f:
     for string in command_list[:-1]:
         insert = insert+string.upper()+'_'
     insert = insert+command_list[-1].upper()+"_CMD "+str(number_record)+"\n"
-    with open("tuling_nlu1.cpp","wt") as f:
+    with open(file_path2,"wt") as f:
         content=content[:i_record]+[insert]+content[i_record:]
         f.writelines(content)
         f.close()
         
-with open('tuling_nlu1.cpp',"rt") as f:
+with open(file_path2,"rt") as f:
     content=f.readlines()
     tab_record = -1
     i_record = -1
@@ -106,12 +111,12 @@ with open('tuling_nlu1.cpp',"rt") as f:
     for string in command_list:
         insert = insert + string+"_"
     insert = insert+"str);\n"
-    with open("tuling_nlu1.cpp","wt") as f:
+    with open(file_path2,"wt") as f:
         content=content[:i_record]+[insert]+content[i_record:]
         f.writelines(content)
         f.close()
 
-with open('tuling_nlu1.cpp',"rt") as f:
+with open(file_path2,"rt") as f:
     content=f.readlines()
     tab_record = -1
     i_record = -1
@@ -133,12 +138,12 @@ with open('tuling_nlu1.cpp',"rt") as f:
     insert_item = insert_item+'CMD;\n'
     insert.append(insert_item)
     insert.append('    }\n')
-    with open("tuling_nlu1.cpp","wt") as f:
+    with open(file_path2,"wt") as f:
         content=content[:i_record]+insert+content[i_record:]
         f.writelines(content)
         f.close()
         
-with open('tuling_nlu1.cpp',"rt") as f:
+with open(file_path2,"rt") as f:
     content=f.readlines()
     i_record = -1
     for i in range(len(content)):
@@ -153,13 +158,13 @@ with open('tuling_nlu1.cpp',"rt") as f:
     for string in command_list:
         insert = insert+string+'_'
     insert = insert+'str);\n'
-    with open("tuling_nlu1.cpp","wt") as f:
+    with open(file_path2,"wt") as f:
         content=content[:i_record]+[insert]+content[i_record:]
         f.writelines(content)
         f.close()
         
 # file3 voice_move.cpp
-with open('voice_move.cpp',"rt") as f:
+with open(file_path3,"rt") as f:
     content=f.readlines()
     i_record = -1
     number_record = -1
@@ -179,12 +184,12 @@ with open('voice_move.cpp',"rt") as f:
     for string in command_list[:-1]:
         insert = insert+string.upper()+'_'
     insert = insert+command_list[-1].upper()+"_CMD "+str(number_record)+"\n"
-    with open("voice_move1.cpp","wt") as f:
+    with open(file_path3,"wt") as f:
         content=content[:i_record]+[insert]+content[i_record:]
         f.writelines(content)
         f.close()
         
-with open('voice_move1.cpp',"rt") as f:
+with open(file_path3,"rt") as f:
     content=f.readlines()
     i_record = -1
     for i in range(len(content)):
@@ -206,13 +211,13 @@ with open('voice_move1.cpp',"rt") as f:
     insert.append(insert_item)
     insert.append('                break;\n')
     insert.append('            }\n')
-    with open("voice_move1.cpp","wt") as f:
+    with open(file_path3,"wt") as f:
         content=content[:i_record]+insert+content[i_record:]
         f.writelines(content)
         f.close()
         
 #file 4 riki_patrol_nav.py
-with open('riki_patrol_nav.py',"rt") as f:
+with open(file_path4,"rt") as f:
     content=f.readlines()
     i_record = -1
     for i in range(len(content)):
@@ -229,12 +234,12 @@ with open('riki_patrol_nav.py',"rt") as f:
     insert.append('\n')
     insert_item = '                    self.nav_command = ""\n'
     insert.append(insert_item)
-    with open("riki_patrol_nav1.py","wt") as f:
+    with open(file_path4,"wt") as f:
         content=content[:i_record]+insert+content[i_record:]
         f.writelines(content)
         f.close()
         
-with open('riki_patrol_nav1.py',"rt") as f:
+with open(file_path4,"rt") as f:
     content=f.readlines()
     i_record = -1
     for i in range(len(content)):
@@ -252,9 +257,9 @@ with open('riki_patrol_nav1.py',"rt") as f:
     for string in command_list[:-1]:
         insert_item = insert_item+string+' '
     insert_item = insert_item+command_list[-1]+"'\n"
-    insert.append(insert_item)
+insert.append(insert_item)
     insert.append('            return\n')
-    with open("riki_patrol_nav1.py","wt") as f:
+    with open(file_path4,"wt") as f:
         content=content[:i_record]+insert+content[i_record:]
         f.writelines(content)
         f.close()
