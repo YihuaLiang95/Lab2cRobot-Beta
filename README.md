@@ -22,3 +22,9 @@ List the work done and to be done week by week.
    Built the communication interface to automaticly update the file onto the server. The usages are as follows:
    
    First put the file upload.py into the same directory of the conducting python file, then add "import upload" in the conducting file. Use upload_file(file_path,file_name) to upload the local file into the robot's server account. file_path and file_name are the path and the name of the file to be uploaded. The file will be uploaded into the server account "robot", whose password is "roborocks".
+   # 6. Week 12</br>
+   Previously, to add a new voice command data path to control the robot, we need to change four files (namely cmd_word_params.yaml, tuling_nlu.cpp, voice_move.cpp and riki_patrol_nav.py) simutaneously. It takes a lot of time and is very likely to encounter bugs.
+   
+   To solve this problem, I wrote a interface file, which takes in the command and the command name (for example, test command 测试命令) and handles all the inner changes of the four files.
+   
+   To use this file, the user should: 1. change the command and command name in file_change.py; 2. run the file use python3; 3. do the "catkin_make" step in the directory of rikirobot_audio/something/something/ 4. add the lines that you need in the riki_patrol_nav.py file.
