@@ -19,7 +19,7 @@ except:
 from PIL import Image
 
 from cfg.config import config
-from utils import mask_depth,opening,binary,find_contour,crop_depth
+from utils import mask_depth,opening,binary,find_contour,crop_depth,get_average_depth
 
 class ObstacleDetector(object):
     def __init__(self):
@@ -59,6 +59,21 @@ class ObstacleDetector(object):
         hulls = self.detect_contour(colormap,depth_image)
         self.draw_contour(colormap,hulls)
         return colormap
+    
+    def computer_depth(self, colormap,depth_image):
+        hulls = self.detect_contour(colormap,depth_image)
+        for contour_points in hulls:
+            mask, depth = get_average_depth(contour_points, depth_image)
+            print(depth)
+            
+#            mask = get_average_depth(contour_points, depth_image)
+            rgb_mask = []
+            rgb_mask.append(colormap[:,:,0] * mask)
+            rgb_mask.append(colormap[:,:,1] * mask)
+            rgb_mask.append(colormap[:,:,2] * mask)
+            im = Image.fromarray(np.array(rgb_mask).transpose(1,2,0))
+            im.show()
+            
 
 def main():
     od = ObstacleDetector()
@@ -73,10 +88,12 @@ def main():
     depth_image = depth_images[5]
     rgb_image = rgb_images[5]
 
+    od.computer_depth(rgb_image,depth_image)
+    
     mix = np.concatenate((colormap,rgb_image),axis=1)
     image = od.detect_and_draw_contours(rgb_image,depth_image)
     im = Image.fromarray(image)
-    im.save("demo/5_hull_crop.jpg")
+    im.save("5_hull_crop.jpg")
     im.show()   
 
 
@@ -101,4 +118,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
