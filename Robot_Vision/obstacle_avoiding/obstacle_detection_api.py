@@ -58,22 +58,26 @@ class ObstacleDetector(object):
     def detect_and_draw_contours(self,colormap,depth_image):
         hulls = self.detect_contour(colormap,depth_image)
         self.draw_contour(colormap,hulls)
+        
+        # compute average depth
+        depth_list = self.compute_depth(hulls, depth_image)
+        #pdb.set_trace()
+        self.draw_depth_txt(colormap,hulls,depth_list)
         return colormap
+        
+    def draw_depth_txt(self,frame,hulls,depth_list):
+        for i,hull in enumerate(hulls):
+            tx,ty = hull[0].flatten()
+            avg_depth = str(round(0.001 * depth_list[i] ,2)) + "m"
+            cv2.putText(frame, avg_depth, (tx,ty), cv2.FONT_HERSHEY_SIMPLEX,
+                1,(255,255,0),2)
     
-    def computer_depth(self, colormap,depth_image):
-        hulls = self.detect_contour(colormap,depth_image)
+    def compute_depth(self, hulls,depth_image):
+        depth_list = []
         for contour_points in hulls:
-            mask, depth = get_average_depth(contour_points, depth_image)
-            print(depth)
-            
-#            mask = get_average_depth(contour_points, depth_image)
-            rgb_mask = []
-            rgb_mask.append(colormap[:,:,0] * mask)
-            rgb_mask.append(colormap[:,:,1] * mask)
-            rgb_mask.append(colormap[:,:,2] * mask)
-            im = Image.fromarray(np.array(rgb_mask).transpose(1,2,0))
-            im.show()
-            
+            avg_depth = get_average_depth(contour_points, depth_image)
+            depth_list.append(avg_depth)
+        return depth_list
 
 def main():
     od = ObstacleDetector()

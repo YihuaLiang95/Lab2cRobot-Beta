@@ -3,8 +3,9 @@
 """
 import time
 import sys
-sys.path.append("../Robot_Speech")
-import speech_api
+sys.path.append("/home/tbsi2c/Program/zifeng/Lab2cRobot-Beta")
+sys.path.append("/home/tbsi2c/Program/zifeng/Lab2cRobot-Beta/Robot_Speech")
+from Robot_Speech import speech_api
 
 try:
     import cv2

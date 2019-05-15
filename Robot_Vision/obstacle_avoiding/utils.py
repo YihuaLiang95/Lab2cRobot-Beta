@@ -47,37 +47,44 @@ def crop_depth(depth_image,crop_ground=0.25):
     m,n = depth_image.shape[0],depth_image.shape[1]
     depth_image[int((1 - crop_ground)*m):,:] = 50000
     return depth_image
-
+    
 def get_average_depth(contour_points, depth_image):
-    '''
-    Find the average depth of the given area of depth_image
-    contour_points is the points of ONE contour
-    contour_ponies should be a array like array([[x1,y1],[x2,y2]],dtype=int32)
-    '''
-    contour_points = contour_points.reshape(-1,2)
-    
-    points = np.zeros(contour_points.shape)
-    points[:,1] = contour_points[:,0]
-    points[:,0] = contour_points[:,1]
-#    contour_points[:,1] = contour_points[:,0]
-#    contour_points[:,0] = temp
-    
-    contour_path = path.Path(points)
-    
-    weight, height = depth_image.shape
-    coordinate = []
-    for x in range(weight):
-        for y in range(height):
-            coordinate.append([x,y])
-
-    in_boolen = contour_path.contains_points(coordinate)
-    mask = in_boolen.reshape(weight, height)
+    """Get average depth in a convex hull from depth image
+    with cv2.fillConvexPoly
+    """
+    mask = np.zeros_like(depth_image)
+    mask = cv2.fillConvexPoly(mask, contour_points,1)
     mask_image = mask * depth_image
     
     count = mask.sum()
     depth = mask_image.sum()
     average_depth = depth / count
     
-    return mask, average_depth
+    return average_depth
+    
+def get_average_depth_old(contour_points, depth_image):
+    '''deprecated, too slow.
+    Find the average depth of the given area of depth_image
+    contour_points is the points of ONE contour
+    contour_ponies should be a array like array([[x1,y1],[x2,y2]],dtype=int32)
+    '''
+    contour_points = contour_points.reshape(-1,2)
+    points = np.zeros(contour_points.shape)
+    points[:,1] = contour_points[:,0]
+    points[:,0] = contour_points[:,1]
+    
+    contour_path = path.Path(points)
+    
+    width, height = depth_image.shape
+    coordinate = [[x,y] for x in range(width) for y in range(height)]
+    in_boolen = contour_path.contains_points(coordinate)
+    mask = in_boolen.reshape(width, height)
+    mask_image = mask * depth_image
+    
+    count = mask.sum()
+    depth = mask_image.sum()
+    average_depth = depth / count
+    
+    return average_depth
 
     
