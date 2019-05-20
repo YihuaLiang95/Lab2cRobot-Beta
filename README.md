@@ -1,2 +1,2 @@
-# Lab2cRobot-Beta
-Updated the ultrasonic sensor manual part, please check that md file.
+# Visual Question Answering for TBSI2C Robot
+Visual Question Answering (VQA) is a challenging task that has received increasing attention from both the computer vision and the natural language processing communities. Given an image and a question in natural language, it requires reasoning over visual elements of the image and general knowledge to infer the correct answer. Such kind of ability will make our robot much smarter through the combination of Natural Language Processing(NLP) and Computer Vision(CV) fields.
