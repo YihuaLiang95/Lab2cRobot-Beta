@@ -1,0 +1,13 @@
+<launch>
+
+  <!-- startup patrol navigation node -->
+  <node pkg="rikirobot" type="record_cons.py" name="record_cons_node" output="screen" >
+    <param name="rest_time"     value="5" />
+    <param name="keep_patrol"   value="true" />
+    <param name="random_patrol" value="false" />
+    <param name="patrol_type"   value="0" />
+    <param name="patrol_loop"   value="1" />
+    <param name="patrol_time"   value="3" />
+  </node>
+ 
+</launch>
