@@ -1,0 +1,102 @@
+Automatic Obstacle Avoidance of Robots 
+  Our automatic obstacle avoidance (AOA) function depends on the costmap algorithm, which you can refer to this website http://wiki.ros.org/costmap_2d for more information. 
+The costmap_2d package has been downloaded and compiled when downloading and compileing ROS files from rikirobot official website. The costmap_2d package is included in the navigation package.
+If not, you can download the navigation package from the website https://github.com/ros-planning/navigation. You should open a New Terminal, and the steps are as follow:
+1.Set the installation path under catkin_ws/src:
+  cd catkin_ws/src
+2.Download the navigation package:
+  git clone https://github.com/ros-planning/navigation.git
+3.Compile the navigation package:
+  cd ..
+  catkin_make
+  source
+4.Source the navigation package:
+  source
+  source ~/catkin_ws/devel/setup.bash
+  echo "source ~/catkin_ws/devel/setup.bash " >> ~/.bashrc
+Now, we have had the costmap_2d package, but if we want to use this algorithm to do AOA, we need to install laser radar equipped with our rikirobot, which type we use is RPLIDAR A1. If you want to change another type of lidar, you need to change the parameter in the navigate.launch file. Up to now, we can use lidar for AOA.
+The following part will introduce how to use ultrasonic sensors (sonar) for AOA. The main idea is to generate a new map plugin from sonar data, add it to costmap, and the robot will make path planning on the new map. We need to do two things for sonar AOA. The first thing is to plug sonars into the robot system. 
+The second thing is to download the range_sensor_layer package and modify the parameters in the costmap package.
+
+The ultrasonic sensors (sonars) we use are brought from the rikirobot company, and we bought 4 ultrasonic sensors, three of them are set in the front of the robot and one is set in the back. After connecting the hardware of the ultrasonic sensors with the main computer, we need to connecting the software of ultrasonic sensor to ROS, and we can refer to the website 
+    http://community.bwbot.org/topic/456/%E8%93%9D%E9%B2%B8ros%E8%B6%85%E5%A3%B0%E6%B3%A2%E4%BC%A0%E6%84%9F%E5%99%A8%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E .
+1.Download sonar driver package from src file in catkin_ws workspace:
+  cd catkin_ws/src
+  git clone https://github.com/BlueWhaleRobot/bw_sensors.git
+  cd ..
+  catkin_make
+  source
+2.Check the USB port number and modify the USB port number of bw_sensers.launch in the launch file:
+#Look at the USB port where the serial port is located, that is, the number before the character / ttyUSBXXX in the output of the next command, such as 2-6:1.0, / ttyUSBXXX, needs to be replaced with the actual port number.
+  udevadm info --name=/dev/ttyUSBXXX --attribute-walk
+#Modify the USB port number we got in the last step in bw_sensers.launch
+  <param name="port" value="/dev/ttyUSBXXX"/>
+  Note: If you used the above method, you need to connect USB serial port to fixed host USB port at every time. It is better for you to bind the inserted USB port number to the port for convenience, and you can refer to the website
+  https://msadowski.github.io/linux-static-port/ .
+3.Modify TF transformation relationship of bw_sensers.launch in the launch file, and you should measure the coordinate data relative to the center of the robot in meters:
+  <node pkg="tf" type="static_transform_publisher" name="baselinkSonar_broadcaster1" args="0.225 0.15 0.15 1.0472 0 0  base_link sonar1 50"/>
+4.Modify each sonar’s parameters of bw_sensers.cpp in the src file:
+  CarSonar1.header.frame_id = "sonar1";
+  CarSonar1.radiation_type = 0;
+  CarSonar1.field_of_view = 0.7;
+  CarSonar1.min_range = 0.19;
+  CarSonar1.max_range = 1.0;
+5.Start the ROS driver node:
+  roslaunch bw_sensors bw_sensors.launch
+#When the node starts successfully, the following topics will be automatically published.
+  /bw_sensors/IMU
+  /bw_sensors/Power
+  /bw_sensors/StatusFlag 
+  /bw_sensors/Sonar1 
+  /bw_sensors/Sonar2 
+  /bw_sensors/Sonar3
+  /bw_sensors/Sonar4
+6.When the node starts successfully, we can open rviz and see simulated sonars.
+  rosrun rviz rviz
+  open file -> bw_sensers.launch
+
+The next part is to add sonar layer to costmap as a plugin, and you can refer to the website https://blog.csdn.net/xiekaikaibing/article/details/80096033 .
+1.Download range_sensor_layer package, and insert plugin into ROS system
+  cd catkin_ws/src
+  git clone https://github.com/DLu/navigation_layers.git
+  cd ..
+  catkin_make
+  source
+2.You can check whether plugin is successfully inserted into ROS system. Entering the following code into the terminal:
+  rospack plugins --attrib=plugin costmap_2d
+#If it is successful, we will get the following result:
+  range_sensor_layer /home/tbsi2c/catkin_ws/src/navigation_layers/range_sensor_layer/costmap_plugins.xml
+3.Configure costmap parameter file
+  costmap_common_params.yaml 
+(location: /home/tbsi2c/catkin_ws/src/rikirobot_project/rikirobot/param/navigation/2wd)
+		#add at the top grid
+		sonar_layer:  
+  		enabled:            true  
+  		clear_threshold:    0.23  
+  		mark_threshold:     0.50  
+  		topics: ["/bw_sensors/Sonar1", "/bw_sensors/Sonar2", "/bw_sensors/Sonar3", "/bw_sensors/Sonar4"]  
+  		clear_on_max_reading: true
+	
+  local_costmap_params.yaml
+（location：/home/tbsi2c/catkin_ws/src/rikirobot_project/rikirobot/param/navigation）
+#add with two blacks to make sure plugins belong to local_costmap
+ 		  plugins:    
+            - {name: sonar_layer,  type: "range_sensor_layer::RangeSensorLayer"}
+  		  sonar_layer:
+          	topics: ["/bw_sensors/Sonar1", "/bw_sensors/Sonar2", "/bw_sensors/Sonar3", "/bw_sensors/Sonar4"]
+ 			      no_readings_timeout: 2.0
+
+		#Compile the workspace
+		cd catkin_ws
+		source
+4.You can check whether sonar_layer is successfully run when navigating. Entering the following code into the terminal:
+roslaunch rikirobot voice_nav_bwsensors_filtered_bringup.launch
+#If it is successful, you can get the following result:
+[ INFO] [1558341790.040473328]: Using plugin "sonar_layer"
+[ INFO] [1558341790.044789707]: local_costmap/sonar_layer: ALL as input_sensor_type given
+[ INFO] [1558341790.050224203]: RangeSensorLayer: subscribed to topic /bw_sensors/Sonar1
+[ INFO] [1558341790.061454050]: RangeSensorLayer: subscribed to topic /bw_sensors/Sonar2
+[ INFO] [1558341790.066251301]: RangeSensorLayer: subscribed to topic /bw_sensors/Sonar3
+[ INFO] [1558341790.094528217]: RangeSensorLayer: subscribed to topic /bw_sensors/Sonar4
+
+
