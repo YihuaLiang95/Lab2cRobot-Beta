@@ -14,11 +14,14 @@ If not, you can download the navigation package from the website https://github.
   source
   source ~/catkin_ws/devel/setup.bash
   echo "source ~/catkin_ws/devel/setup.bash " >> ~/.bashrc
-Now, we have had the costmap_2d package, but if we want to use this algorithm to do AOA, we need to install laser radar equipped with our rikirobot, which type we use is RPLIDAR A1. If you want to change another type of lidar, you need to change the parameter in the navigate.launch file. Up to now, we can use lidar for AOA.
-The following part will introduce how to use ultrasonic sensors (sonar) for AOA. The main idea is to generate a new map plugin from sonar data, add it to costmap, and the robot will make path planning on the new map. We need to do two things for sonar AOA. The first thing is to plug sonars into the robot system. 
+Now, we have had the costmap_2d package, but if we want to use this algorithm to do AOA, we need to install laser radar equipped with our rikirobot, which type we use is RPLIDAR A1. 
+If you want to change another type of lidar, you need to change the parameter in the navigate.launch file. Up to now, we can use lidar for AOA.
+The following part will introduce how to use ultrasonic sensors (sonar) for AOA. The main idea is to generate a new map plugin from sonar data, add it to costmap, and the robot will make path planning on the new map. We need to do two things for sonar AOA. 
+The first thing is to plug sonars into the robot system. 
 The second thing is to download the range_sensor_layer package and modify the parameters in the costmap package.
 
-The ultrasonic sensors (sonars) we use are brought from the rikirobot company, and we bought 4 ultrasonic sensors, three of them are set in the front of the robot and one is set in the back. After connecting the hardware of the ultrasonic sensors with the main computer, we need to connecting the software of ultrasonic sensor to ROS, and we can refer to the website 
+The ultrasonic sensors (sonars) we use are brought from the rikirobot company, and we bought 4 ultrasonic sensors, three of them are set in the front of the robot and one is set in the back. 
+After connecting the hardware of the ultrasonic sensors with the main computer, we need to connecting the software of ultrasonic sensor to ROS, and we can refer to the website 
     http://community.bwbot.org/topic/456/%E8%93%9D%E9%B2%B8ros%E8%B6%85%E5%A3%B0%E6%B3%A2%E4%BC%A0%E6%84%9F%E5%99%A8%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E .
 1.Download sonar driver package from src file in catkin_ws workspace:
   cd catkin_ws/src
@@ -31,7 +34,8 @@ The ultrasonic sensors (sonars) we use are brought from the rikirobot company, a
   udevadm info --name=/dev/ttyUSBXXX --attribute-walk
 #Modify the USB port number we got in the last step in bw_sensers.launch
   <param name="port" value="/dev/ttyUSBXXX"/>
-  Note: If you used the above method, you need to connect USB serial port to fixed host USB port at every time. It is better for you to bind the inserted USB port number to the port for convenience, and you can refer to the website
+  Note: If you used the above method, you need to connect USB serial port to fixed host USB port at every time. 
+  It is better for you to bind the inserted USB port number to the port for convenience, and you can refer to the website
   https://msadowski.github.io/linux-static-port/ .
 3.Modify TF transformation relationship of bw_sensers.launch in the launch file, and you should measure the coordinate data relative to the center of the robot in meters:
   <node pkg="tf" type="static_transform_publisher" name="baselinkSonar_broadcaster1" args="0.225 0.15 0.15 1.0472 0 0  base_link sonar1 50"/>
