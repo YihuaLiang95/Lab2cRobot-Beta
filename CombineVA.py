@@ -10,6 +10,7 @@ import random
 import threading
 import matplotlib.pyplot as plt
 import multiprocessing
+import pyrealsense2 as rs
 RESPEAKER_CHANNELS = 1 # change base on firmwares, default_firmware.bin as 1 or i6_firmware.bin as 6
 RESPEAKER_WIDTH = 2
 # run getDeviceInfo.py to get index
@@ -59,14 +60,14 @@ def psudo_realtime_wav(filename = 'output.wav',Time = 2, Frequency=22050):
     elif sig_size > DEFAULT_LENGTH:
         sig = sig[0:DEFAULT_LENGTH-1]
     return sig
-def CatchFrames(videoname = "VideoRecord.avi",camera_to_use = 0,TimeLength=7.0,RandFrames=False,ShowWindow = False):
+def CatchFrames(videoname = "VideoRecord.avi",camera_to_use = 0,TimeLength=7.0,ShowWindow = False):
 
     cap = cv2.VideoCapture(0)
     codec = cv2.VideoWriter_fourcc(*"MJPG")
     fps = 25.0
     image_size = (640,480)
     output = cv2.VideoWriter(videoname,codec,fps,image_size)
-    
+    #default fps 30， size 640，480
     if ShowWindow :
         windowName = "Live"
         cv2.namedWindow(windowName,cv2.WINDOW_NORMAL)
@@ -76,12 +77,10 @@ def CatchFrames(videoname = "VideoRecord.avi",camera_to_use = 0,TimeLength=7.0,R
     if not(((len(sys.argv)==2) and (cap.open(str(sys.argv[1]))) or (cap.open(camera_to_use)))):
         print("Error: no camera can be used or no video sources")
         return -1
-
-    if RandFrames == True:
-        OutCounter = random.randint(1,50)
         
     start = time.time()
     end = time.time()
+    frames = []
     Count = 0
     while(cap.isOpened()):
         if end-start >= TimeLength:
@@ -91,11 +90,8 @@ def CatchFrames(videoname = "VideoRecord.avi",camera_to_use = 0,TimeLength=7.0,R
         #pdb.set_trace()
         start_t = cv2.getTickCount()
         output.write(frame)
-        
+        frames.append(frame)
         Count += 1
-        if RandFrames == True:
-            if Count == OutCounter:
-                Outframe = frame.deepcopy()
         if ShowWindow :
             cv2.imshow(windowName,frame)
         stop_t = ((cv2.getTickCount() - start_t)/cv2.getTickFrequency())#remove writing time
@@ -106,10 +102,31 @@ def CatchFrames(videoname = "VideoRecord.avi",camera_to_use = 0,TimeLength=7.0,R
     cap.release()
     output.release()
     cv2.destroyAllWindows()
-    if RandFrames == True:
-        return videoname,Outframe
-    else:
-        return videoname,frame
+
+    return frames
+def CatchFrames_RS(TimeLength=5.0,Width=640.0,Height=480.0,FPS = 30.0):
+    pipeline = rs.pipeline()
+    config = rs.config()
+    config.enable_stream(rs.stream.depth,Width,Height,rs.format.bgr8,FPS)
+
+    profile = pipeline.start(config)
+    align_to = rs.stream.color
+    align = rs.align(align_to)
+
+    rgb_images = []
+    try:
+        while True:
+            frames = pipeline.wait_for_frames()
+
+            aligned_frames = align.process(frames) 
+            color_frame = aligned_frames.get_color_frames()
+
+            color_image = np.asanyarray(color_frame.get_data())
+            rgb_images.append(color_image)
+    finally:
+        pipeline.stop()
+    return rgb_images
+
 class RecordThread(threading.Thread):
     def __init__(self,func,args,name=""):
         threading.Thread.__init__(self)
@@ -141,10 +158,10 @@ def recordVA_t(filename='output.wav',Time=2):
     v_thread.join()
 
     sig = r_thread.get_result()
-    videoname,frame = v_thread.get_result()
-
-    frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
-    return sig,frame,videoname
+    frames = v_thread.get_result()
+    for frame in frames:
+        frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+    return sig,frames
 def recordVA_p(filename='output.wav',videoname = "VideoRecord.avi",Time = 2.0):
     pool = multiprocessing.Pool(processes = 3)
     result = []
@@ -153,14 +170,14 @@ def recordVA_p(filename='output.wav',videoname = "VideoRecord.avi",Time = 2.0):
     pool.close()
     pool.join()
     sig = result[1].get()
-    videoname,frame = result[0].get()
-
-    frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
-    return sig,frame,videoname
+    frames = result[0].get()
+    for frame in frames:
+        frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+    return sig,frames
+    
 if __name__ == "__main__":
     print("start")
     s = time.time()
-    sig,frame,videoname = recordVA_p(filename = 'ouput.wav',Time=5.0)
-    plt.imshow(frame)
+    sig,frames = recordVA_p(filename = 'ouput.wav',Time=5.0)
     e = time.time()
     print("done,%.3f" % (e-s))
