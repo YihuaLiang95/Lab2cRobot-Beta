@@ -1,5 +1,4 @@
 import sys
-import cv2
 import math
 import pyaudio
 import wave
@@ -17,6 +16,10 @@ RESPEAKER_WIDTH = 2
 RESPEAKER_INDEX = 1  # refer to input device id
 CHUNK = 1024
 
+try:
+    import cv2
+except:
+    ros_path = '/opt/ros/kinetic/lib/python2.7/dist-packages'
 def record(WAVE_OUTPUT_FILENAME = "output.wav", RECORD_SECONDS = 2,RESPEAKER_RATE = 22050):
     p = pyaudio.PyAudio()
 
@@ -104,25 +107,62 @@ def CatchFrames(videoname = "VideoRecord.avi",camera_to_use = 0,TimeLength=7.0,S
     cv2.destroyAllWindows()
 
     return frames
-def CatchFrames_RS(TimeLength=5.0,Width=640.0,Height=480.0,FPS = 30.0):
+def CatchFrames_RS(TimeLength=5.0,Width=640,Height=480,FPS = 30,SHOW=True):
     pipeline = rs.pipeline()
     config = rs.config()
-    config.enable_stream(rs.stream.depth,Width,Height,rs.format.bgr8,FPS)
+    config.enable_stream(rs.stream.depth,Width,Height,rs.format.z16,FPS)
+    config.enable_stream(rs.stream.color,Width,Height,rs.format.bgr8,FPS)
+    
 
     profile = pipeline.start(config)
+    
+    depth_sensor = profile.get_device().first_depth_sensor()
+    depth_scale = depth_sensor.get_depth_scale()
+
+    clip_distance_in_meter = 1.
+    clip_distance = clip_distance_in_meter/depth_scale
+
     align_to = rs.stream.color
     align = rs.align(align_to)
 
     rgb_images = []
+    depth_colormaps= []
+    depth_images = []
+
+    MAX_IMAGES = 5
+    idx = 0
+    start = time.time()
+    end = time.time()
     try:
         while True:
             frames = pipeline.wait_for_frames()
 
             aligned_frames = align.process(frames) 
-            color_frame = aligned_frames.get_color_frames()
+            color_frame = aligned_frames.get_color_frame()
+            depth_frame = aligned_frames.get_depth_frame()
 
+            if not depth_frame or not color_frame:
+                continue
+            
             color_image = np.asanyarray(color_frame.get_data())
+            depth_image = np.asanyarray(depth_frame.get_data())
+
+            depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image,alpha=0.03),cv2.COLORMAP_JET)
+            images = np.hstack((color_image,depth_colormap))
+
+            cv2.namedWindow('realsense',cv2.WINDOW_AUTOSIZE)
+            cv2.imshow('realsense',images)
+            key = cv2.waitKey(1)
+            if key == (ord=='q'):
+                break
+
             rgb_images.append(color_image)
+            depth_images.append(depth_image)
+            depth_colormaps.append(depth_colormap)
+            end = time.time()
+            if end - start >= TimeLength:
+                saved_sample = {"image":depth_images,"colormap":depth_colormaps,"rgb":rgb_images}
+                np.save("depth_images.npy",saved_sample)
     finally:
         pipeline.stop()
     return rgb_images
