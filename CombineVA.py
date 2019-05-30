@@ -10,16 +10,24 @@ import threading
 import matplotlib.pyplot as plt
 import multiprocessing
 import pyrealsense2 as rs
+
+"""
+It is not recommended to change the parameters.
+BUT remember change respeaker index when move to different device 
+"""
 RESPEAKER_CHANNELS = 1 # change base on firmwares, default_firmware.bin as 1 or i6_firmware.bin as 6
 RESPEAKER_WIDTH = 2
 # run getDeviceInfo.py to get index
-RESPEAKER_INDEX = 1  # refer to input device id
+RESPEAKER_INDEX = 8  # refer to input device id
 CHUNK = 1024
 
 try:
     import cv2
 except:
     ros_path = '/opt/ros/kinetic/lib/python2.7/dist-packages'
+    if ros_path in sys.path:
+        sys.path.remove(ros_path)
+    import cv2
 def record(WAVE_OUTPUT_FILENAME = "output.wav", RECORD_SECONDS = 2,RESPEAKER_RATE = 22050):
     p = pyaudio.PyAudio()
 
@@ -63,7 +71,7 @@ def psudo_realtime_wav(filename = 'output.wav',Time = 2, Frequency=22050):
     elif sig_size > DEFAULT_LENGTH:
         sig = sig[0:DEFAULT_LENGTH-1]
     return sig
-def CatchFrames(videoname = "VideoRecord.avi",camera_to_use = 0,TimeLength=7.0,ShowWindow = False):
+def CatchFrames(videoname = "VideoRecord.avi",camera_to_use = 0,TimeLength=2.0,ShowWindow = False):
 
     cap = cv2.VideoCapture(0)
     codec = cv2.VideoWriter_fourcc(*"MJPG")
@@ -107,7 +115,7 @@ def CatchFrames(videoname = "VideoRecord.avi",camera_to_use = 0,TimeLength=7.0,S
     cv2.destroyAllWindows()
 
     return frames
-def CatchFrames_RS(TimeLength=5.0,Width=640,Height=480,FPS = 30,SHOW=True):
+def CatchFrames_RS(MAX_IMAGES=5,Width=640,Height=480,FPS = 30,SHOW=True):
     pipeline = rs.pipeline()
     config = rs.config()
     config.enable_stream(rs.stream.depth,Width,Height,rs.format.z16,FPS)
@@ -133,6 +141,7 @@ def CatchFrames_RS(TimeLength=5.0,Width=640,Height=480,FPS = 30,SHOW=True):
     idx = 0
     start = time.time()
     end = time.time()
+    cv2.namedWindow('realsense',cv2.WINDOW_AUTOSIZE)
     try:
         while True:
             frames = pipeline.wait_for_frames()
@@ -150,19 +159,23 @@ def CatchFrames_RS(TimeLength=5.0,Width=640,Height=480,FPS = 30,SHOW=True):
             depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image,alpha=0.03),cv2.COLORMAP_JET)
             images = np.hstack((color_image,depth_colormap))
 
-            cv2.namedWindow('realsense',cv2.WINDOW_AUTOSIZE)
+           
             cv2.imshow('realsense',images)
             key = cv2.waitKey(1)
             if key == (ord=='q'):
                 break
-
+            color_image = cv2.cvtColor(color_image,cv2.COLOR_BGR2RGB)
             rgb_images.append(color_image)
             depth_images.append(depth_image)
             depth_colormaps.append(depth_colormap)
             end = time.time()
-            if end - start >= TimeLength:
+            #if end - start >= TimeLength:
+            if idx > MAX_IMAGES:            
                 saved_sample = {"image":depth_images,"colormap":depth_colormaps,"rgb":rgb_images}
                 np.save("depth_images.npy",saved_sample)
+                break
+            idx+=1
+            print(idx)
     finally:
         pipeline.stop()
     return rgb_images
@@ -183,10 +196,7 @@ class RecordThread(threading.Thread):
 def recordVA_t(filename='output.wav',Time=2):
 
     """
-    record(WAVE_OUTPUT_FILENAME=filename,RECORD_SECONDS=Time)
-    sig = psudo_realtime_wav(filename)
 
-    videoname,frame = CatchFrames(TimeLength=Time)
     """
     r_thread = RecordThread(psudo_realtime_wav,(filename,5.0,22050))
     v_thread = RecordThread(CatchFrames,("VideoRecord.avi",0,5.0))
@@ -199,25 +209,102 @@ def recordVA_t(filename='output.wav',Time=2):
 
     sig = r_thread.get_result()
     frames = v_thread.get_result()
-    for frame in frames:
-        frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
     return sig,frames
-def recordVA_p(filename='output.wav',videoname = "VideoRecord.avi",Time = 2.0):
+def recordVA_p(filename='output.wav',Time = 2.0,MAX_IMAGES=5,HIDTH=128,WIDTH=128,FPS=30,Show=False):
+    """
+    This function will use multiprocess to catch frames while recording voice
+    Attention: the process is not well synchrounized.
+    filename: name of audio output
+    Time: length of audio
+    MAX_IMAGES: the number of frames that will be catched. Don't set value larger than 14
+    HIDTH: hidth of frames
+    WIDTH: width of frames
+    FPS: Fps of input stream
+    Show: whether show the results on screen
+    """
     pool = multiprocessing.Pool(processes = 3)
     result = []
-    result.append(pool.apply_async(CatchFrames,(videoname,0,Time)))
     result.append(pool.apply_async(psudo_realtime_wav,(filename,Time)))
+    result.append(pool.apply_async(CatchFrames_RS,(MAX_IMAGES,HIDTH,WIDTH,FPS,Show)))
     pool.close()
     pool.join()
-    sig = result[1].get()
-    frames = result[0].get()
-    for frame in frames:
-        frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+    sig = result[0].get()
+    frames = result[1].get()
     return sig,frames
-    
+def Copy_Record(TimeLength=5):
+    # Configure depth and color streams
+    pipeline = rs.pipeline()
+    config = rs.config()
+    config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
+    config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+
+    # Start streaming
+    profile = pipeline.start(config)
+    depth_sensor = profile.get_device().first_depth_sensor()
+    depth_scale = depth_sensor.get_depth_scale()
+    # print("Depth scale is", depth_scale)
+    clip_distance_in_meter = 1.
+    clip_distance = clip_distance_in_meter / depth_scale  # around 1:1000
+
+    # Align rgb image and depth image
+    align_to = rs.stream.color
+    align = rs.align(align_to)
+
+    rgb_images = []
+    depth_colormaps = []
+    depth_images = []
+    MAX_IMAGES = 15
+    idx = 0
+    #start = time.time()
+    try:
+        while True:
+
+            # Wait for a coherent pair of frames: depth and color
+            frames = pipeline.wait_for_frames()
+            # depth_frame = frames.get_depth_frame()
+            # color_frame = frames.get_color_frame()
+            
+            # get aligned frame
+            aligned_frames = align.process(frames)
+            depth_frame = aligned_frames.get_depth_frame()
+            color_frame = aligned_frames.get_color_frame()
+            
+            if not depth_frame or not color_frame:
+                continue
+
+            # Convert images to numpy arrays
+            depth_image = np.asanyarray(depth_frame.get_data())
+            color_image = np.asanyarray(color_frame.get_data())
+
+            # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
+            depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
+            
+            # Stack both images horizontally
+            images = np.hstack((color_image, depth_colormap))
+
+            # Show images
+            cv2.namedWindow('RealSense', cv2.WINDOW_AUTOSIZE)
+            cv2.imshow('RealSense', images)
+            k = cv2.waitKey(1)
+            if k == ord("f"):
+                break    # Save images
+            rgb_images.append(color_image)
+            depth_images.append(depth_image)
+            depth_colormaps.append(depth_colormap)
+            idx += 1
+            if idx > MAX_IMAGES:
+                saved_sample = {"image":depth_images,"colormap":depth_colormaps,
+                    "rgb":rgb_images}
+                np.save("depth_images.npy",saved_sample)
+                break
+
+    finally:
+
+        # Stop streaming
+        pipeline.stop()
 if __name__ == "__main__":
     print("start")
     s = time.time()
-    sig,frames = recordVA_p(filename = 'ouput.wav',Time=5.0)
+    sig,frames = recordVA_p()
     e = time.time()
     print("done,%.3f" % (e-s))
