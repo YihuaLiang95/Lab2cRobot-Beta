@@ -10,6 +10,10 @@ except:
         sys.path.remove(ros_path)
     import cv2
 
+'''
+To alter the defaukt properties such as fps, width and height, please run 
+'rs-enumerate-devices' on the terminal to get a list of possible values.
+'''
 class CameraHelper:
     def __init__(self, max_frames = 10, fps = 30, width = 640, height = 480):
         self.max_frames = max_frames
@@ -25,12 +29,14 @@ class CameraHelper:
     def recordVideo(self, rgbStream = True, depthStream = True):
         if (not rgbStream) and (not depthStream):
             return None
+        print("Initialising camera pipeline and video writers..")
         outputColor, outputDepth = None, None
         if rgbStream:
             outputColor = cv2.VideoWriter('RGB_video.avi',self.codec,self.frames_per_sec,(self.width, self.height))
         if depthStream:
-            outputDepth = cv2.VideoWriter('depth_video.avi',self.codec,self.frames_per_sec,(self.width, self.height))
+            outputDepth = cv2.VideoWriter('depth_video.avi',self.codec,self.frames_per_sec,(self.width, self.height)) 
         self.pipeline.start(self.config)
+        print("Starting camera stream..")
         idx = 0
         try:
             while True:
@@ -48,15 +54,16 @@ class CameraHelper:
                     depth_image = np.asanyarray(depth_frame.get_data())
                     depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image,alpha=0.03),cv2.COLORMAP_JET)
                     outputDepth.write(depth_colormap)
-                #images = np.hstack((color_image,depth_colormap))
-                #cv2.imshow('realsense',images)
-                #key = cv2.waitKey(1)
                 idx+=1
             outputColor.release()
             outputDepth.release()
         finally:
             self.pipeline.stop()
-        print("Saved %d frames." % (idk-1))
+            print("Done with streaming and saving camera stream.")
+        print("Saved %d frames." % (idx-1))
+
+    def getProperties(self):
+        print("Maximum #frames to record: %d\nFrames per second: %d\nWidth: %f\nHeight:%f\n" %(self.max_frames, self.frames_per_sec, self.width, self.height))
 
     def playVideo(self, filepath = 'RGB_video.avi'):
         cap = cv2.VideoCapture(filepath)
