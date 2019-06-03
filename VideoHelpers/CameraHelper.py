@@ -2,6 +2,13 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import pyrealsense2 as rs
+try:
+    import cv2
+except:
+    ros_path = '/opt/ros/kinetic/lib/python2.7/dist-packages'
+    if ros_path in sys.path:
+        sys.path.remove(ros_path)
+    import cv2
 
 class CameraHelper:
     def __init__(self, max_frames = 10, fps = 30, width = 640, height = 480):
@@ -15,15 +22,15 @@ class CameraHelper:
         self.config.enable_stream(rs.stream.depth, self.width, self.height, rs.format.z16, self.frames_per_sec)
         self.config.enable_stream(rs.stream.color, self.width, self.height, rs.format.bgr8, self.frames_per_sec)
 
-    def saveVideo(rgbStream = True, depthStream = True):
+    def recordVideo(self, rgbStream = True, depthStream = True):
         if (not rgbStream) and (not depthStream):
             return None
         outputColor, outputDepth = None, None
         if rgbStream:
-            outputColor = cv2.VideoWriter('RGB_video.avi',codec,FPS,(self.width, self.height))
+            outputColor = cv2.VideoWriter('RGB_video.avi',self.codec,self.frames_per_sec,(self.width, self.height))
         if depthStream:
-            outputDepth = cv2.VideoWriter('depth_video.avi',codec,FPS,(self.width, self.height))
-        self.pipeline.start(config)
+            outputDepth = cv2.VideoWriter('depth_video.avi',self.codec,self.frames_per_sec,(self.width, self.height))
+        self.pipeline.start(self.config)
         idx = 0
         try:
             while True:
@@ -51,7 +58,7 @@ class CameraHelper:
             self.pipeline.stop()
         print("Saved %d frames." % (idk-1))
 
-    def readVideo(filepath = 'RGB_video.avi'):
+    def playVideo(self, filepath = 'RGB_video.avi'):
         cap = cv2.VideoCapture(filepath)
         while(cap.isOpened()):
             ret, frame = cap.read()
