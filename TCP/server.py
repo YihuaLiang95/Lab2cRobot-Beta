@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import TCP_service
 
-HOST = "127.0.0.1"
-PORT =  1234
+HOST = "10.8.4.170"
+PORT =  10086
 addr = (HOST, PORT)
 
 def image_process(image):

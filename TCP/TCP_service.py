@@ -6,11 +6,6 @@ import struct
 import json
 import time
 
-
-HOST = "127.0.0.1"
-PORT =  1234
-addr = (HOST, PORT)
-
 class TCP_user():
     def __init__(self, addr):
         self.addr = addr
@@ -20,7 +15,7 @@ class TCP_user():
         '''
         image is a image array
         '''
-        print(addr)
+
         if 'array' not in str(type(image)):
             return
         

@@ -3,7 +3,7 @@ import TCP_service
 import numpy as np
 
 HOST = "10.8.4.170"
-PORT =  12345
+PORT =  10086
 addr = (HOST, PORT)
 
 npy_file = 'C:/Users/zhang/Lab2cRobot-Beta/Robot_Vision/obstacle_avoiding/depth_images.npy'
