@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import sys
 import TCP_service
 import numpy as np
 from PIL import Image
@@ -47,6 +48,7 @@ clip_distance = clip_distance_in_meter / depth_scale  # around 1:1000
 align_to = rs.stream.color
 align = rs.align(align_to)
 cv2.namedWindow("Real-time", cv2.WINDOW_AUTOSIZE)
+cv2.namedWindow("Face",cv2.WINDOW_AUTOSIZE)
 
 images_count = 0
 while True:
@@ -60,6 +62,7 @@ while True:
     # Convert images to numpy arrays
     depth_image = np.asanyarray(depth_frame.get_data())
     color_image = np.asanyarray(color_frame.get_data())
+    cv2.imshow("Real-time", color_image)
 
     if images_count % 20 == 0:
         client.send_image(color_image)
@@ -74,7 +77,8 @@ while True:
         print("Stop")
         break
 
-    cv2.imshow("Real-time", p_img)
+    cv2.imshow("Face", p_img)
+
     images_count += 1
 
 
