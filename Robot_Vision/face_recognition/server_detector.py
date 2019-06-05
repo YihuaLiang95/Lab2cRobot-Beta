@@ -5,17 +5,24 @@ import numpy as np
 import os
 import mtcnn_detector
 import facenet_detector
-
+import cv2
 from PIL import Image
 import pdb
-
+from scipy import misc
+import TCP_service
 from utils import detect_face
 from cfg.face_config import config
 
-root_path = os.path.join(os.getcwd(),"face_recognition/")
+HOST = "10.8.4.170"
+PORT = 10086
+ADDR = (HOST, PORT)
+
+
+root_path = os.getcwd()
+#root_path = os.path.join(os.getcwd(),"face_recognition/")
 mtcnn_path = os.path.join(root_path,"ckpt/mtcnn")
 emb_path = os.path.join(root_path,"data/face_emb.npy")
-emb_dict = np.load(emb_path).item()
+emb_dict = np.load(emb_path, allow_pickle=True).item()
 facenet_ckpt_path = os.path.join(root_path,"ckpt/facenet/20180402-114759/model-20180402-114759.ckpt-275")
 facenet_meta_path = os.path.join(root_path,"ckpt/facenet/20180402-114759/model-20180402-114759.meta")
 
@@ -96,7 +103,25 @@ class faceNet(object):
         cv2.rectangle(frame,(box[0],box[1]),(box[2],box[3]),(0,97,255),2)
 
 def run():
+    # initialize model
     detector = faceNet()
+    print("="*30)
+    print("Model Initialized")
+    print("="*30)
+    
+    server = TCP_service.TCP_user(ADDR)
+    server.server_start_connection()
+
+    while True:
+        image = server.receive_image()
+        print(type(image))
+        out_img, person_names = detector.detect_face_name_and_draw_box(image)
+
+        print("processed")
+        server.send_image(out_img)
+
+
+    """
     img_path = "data/raw_images"
     filenames = os.listdir(img_path)
     for file in filenames:
@@ -104,7 +129,7 @@ def run():
         img_ar = img.asarray()
         detector.detect_face_name_and_draw_box(img_ar)
         pdb.set_trace()
-
+    """
 
 if __name__ == '__main__':
     run()
