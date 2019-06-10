@@ -103,7 +103,7 @@ rosrun rikirobot riki_patrol_nav.py
 2. Launch all the nodes needed. Following command includes all the nodes relevant to voice navigation.
 
    ```
-   roslaunch rikirobot voice_nav_bwsensors_filtered_bringup.launch2
+   roslaunch rikirobot voice_nav_bwsensors_filtered_bringup.launch
    ```
 
 3. Run the client for dynamic reconfigure.
