@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jun 10 18:37:38 2019
-
-@author: zhang
-"""
-
 import time
 import tensorflow as tf
 import config as cfg
@@ -14,7 +7,7 @@ from lenet import Lenet
 from PIL import Image
 import numpy as np
 from sklearn.model_selection import train_test_split
-
+import pdb
 import time
 
 def load_imagenet():
@@ -56,9 +49,10 @@ def main():
     batch_feature = np.load('batch_feature.npy', mmap_mode = 'r').astype(np.float32)
     print('imgae load')
     batch_label = np.load('batch_label.npy', mmap_mode = 'r').astype(np.float32)
-    print('data label')
-    batch_x, x_test, batch_y, y_test =train_test_split(batch_feature,batch_label,test_size=0.3, random_state=0)
     
+    batch_feature = batch_feature / 255.0
+    print('data label')
+    batch_x, x_test, batch_y, y_test = train_test_split(batch_feature,batch_label,test_size=0.3, random_state=0)
     print('Data ready')
 
     # sess = tf.Session()
@@ -67,16 +61,18 @@ def main():
     lenet = Lenet()
     max_iter = cfg.MAX_ITER
     # pdb.set_trace()
-    print('Parameters loaded') 
 
     saver = tf.train.Saver(max_to_keep=5)
     if os.path.exists(parameter_path):
         saver.restore(parameter_path)
+        print('Parameters loaded') 
     else:
         lenet.global_variables_initializer()
     
     lenet.iterator_initializer(batch_x, batch_y)
     print("Dataset Initialized")
+    
+    train_acc = []
 
     for i in range(max_iter):
         #batch = mnist.train.next_batch(50)
@@ -87,14 +83,18 @@ def main():
         
         if i % 100 == 0:
             start_time = time.clock()
-            train_accuracy = lenet.get_accuracy(x_batch, y_batch)
+            train_accuracy = lenet.get_accuracy(batch_x, batch_y)
             loss = lenet.get_loss(x_batch, y_batch)
             print("step %d, training accuracy %.3f" % (i, train_accuracy))
             print("step %d, loss %.3f" % (i, loss))
+            train_acc.append(train_accuracy)
             
             test_accuracy = lenet.get_accuracy(x_test, y_test)
             print("test accuracy %.3f" % (test_accuracy))
             print('The time cost of training: %.2f'%(time.clock() - start_time))
+
+            res = lenet.sess.run(lenet.weights_0) 
+            print("weight:",res.mean())
         
         '''try:
             sess.run(lenet.train_op,feed_dict={lenet.input_images: x_batch, lenet.raw_input_label: y_batch})
