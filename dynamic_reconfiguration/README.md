@@ -96,7 +96,9 @@ rosrun rikirobot riki_patrol_nav.py
 
 
 
-# Extra: Brief steps to fine-tune parameters in navigation package
+# Appendix
+
+## 1. Brief steps to fine-tune parameters in navigation package
 
 1. Modify or add code snippets related to parameters used in navigation in riki_patrol_nav.py.
 
@@ -113,3 +115,13 @@ rosrun rikirobot riki_patrol_nav.py
    ```
 
 3. Type in the command you need in terminal.
+
+
+
+## 2.Location to put files
+
+- riki_patrol_nav.py: catkin_ws/src/rikirobot_project/rikirobot/script (catkin_ws refers to your catkin workspace)
+
+- riki_srvs folder: catkin_ws/src/rikirobot_project  (**Remember to catkin_make for the first time**)
+
+  
