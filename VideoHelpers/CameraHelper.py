@@ -11,7 +11,7 @@ except:
     import cv2
 
 '''
-To alter the defaukt properties such as fps, width and height, please run 
+To alter the default properties such as fps, width and height, please run 
 'rs-enumerate-devices' on the terminal to get a list of possible values.
 '''
 class CameraHelper:
@@ -62,6 +62,34 @@ class CameraHelper:
             print("Done with streaming and saving camera stream.")
         print("Saved %d frames." % (idx-1))
 
+    def captureFrame(self, filename = "picture.jpg", rgbCamera = True, depthCamera = False):
+        if (not rgbCamera) and (not depthCamera):
+            return None
+        print("Initialising camera pipeline..")
+        self.pipeline.start(self.config)
+        print("Starting camera stream..")
+        picTakenFlag = False
+        try:
+            while not picTakenFlag:
+                frames = self.pipeline.wait_for_frames()
+                color_frame = frames.get_color_frame()
+                depth_frame = frames.get_depth_frame()
+                if not depth_frame or not color_frame:
+                    continue
+                if rgbCamera:
+                    color_image = np.asanyarray(color_frame.get_data())
+                    color_image = np.power((color_image), 1.2) #Gamma correction to increase saturation
+                    cv2.imwrite(filename, color_image)
+                    picTakenFlag = True
+                if depthCamera:
+                    depth_image = np.asanyarray(depth_frame.get_data())
+                    depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image,alpha=0.03),cv2.COLORMAP_JET)
+                    cv2.imwrite(filename, depth_image)
+                    picTakenFlag = True
+        finally:
+            self.pipeline.stop()
+            print("Done capturing the frame.")
+
     def getProperties(self):
         print("Maximum #frames to record: %d\nFrames per second: %d\nWidth: %f\nHeight:%f\n" %(self.max_frames, self.frames_per_sec, self.width, self.height))
 
@@ -76,4 +104,13 @@ class CameraHelper:
                 break
         cap.release()
         cv2.destroyAllWindows()
+
+    def displayImage(self, filepath = "picture.jpg"):
+        cap = cv2.imread(filepath, 1)
+        if cap.size == 0:
+            print("No image found at path: "+filepath)
+            return None
+        cv2.imshow('Display',cap)
+        if (cv2.waitKey(0)):
+            cv2.destroyAllWindows()
     
