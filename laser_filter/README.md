@@ -1,6 +1,6 @@
 # Simple Tutorial to Laser_filter
 
-This tutorial is for the basic utilization of ROS pacakage laser_filter.
+This tutorial is for the basic utilization of ROS package laser_filter.
 
 ## 1. Download, and install laser_filter in your ros platform
 

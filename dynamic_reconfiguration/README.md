@@ -20,7 +20,7 @@ More details can be referred at [Tutorials for dynamic_reconfigure](http://wiki.
 
 2. **Some modification to the original package  are needed (for server part), which usually includes C++ code. Better to know some basic C++.**
 
-3. Some packages may have been **implemented dynamic reconfigure** in the original code. Check CMakeList.txt and package.xml to confirm. Like the following codes from costmap2D:
+3. Some packages may have already **included dynamic reconfigure** in the original code. Check CMakeList.txt and package.xml to confirm. Like the following codes from costmap2D:
 
    ![CMakeList](https://github.com/YihuaLiang95/Lab2cRobot-Beta/blob/weitao/dynamic_reconfiguration/IMG/1.png)
 
@@ -62,7 +62,7 @@ Read the original command in  riki_patrol_nav.py, and type the command you want 
 
 
 
-**BE AWARE AND REMEMBER TO MODIFY CODE IN riki_patrol_nav.py IF NECESSARY ** when adding new commands.
+**BE AWARE AND REMEMBER TO MODIFY CODE IN riki_patrol_nav.py IF NECESSARY**  when adding new commands.
 
 
 
@@ -105,7 +105,7 @@ rosrun rikirobot riki_patrol_nav.py
 2. Launch all the nodes needed. Following command includes all the nodes relevant to voice navigation.
 
    ```
-   roslaunch rikirobot voice_nav_bwsensors_filtered_bringup.launch2
+   roslaunch rikirobot voice_nav_bwsensors_filtered_bringup.launch
    ```
 
 3. Run the client for dynamic reconfigure.
@@ -115,6 +115,7 @@ rosrun rikirobot riki_patrol_nav.py
    ```
 
 3. Type in the command you need in terminal.
+<<<<<<< HEAD
 
 
 
@@ -125,3 +126,6 @@ rosrun rikirobot riki_patrol_nav.py
 - riki_srvs folder: catkin_ws/src/rikirobot_project  (**Remember to catkin_make for the first time**)
 
   
+
+=======
+>>>>>>> 1eaa85ae8677f5d64344db795426ba1d70c9ccc3
