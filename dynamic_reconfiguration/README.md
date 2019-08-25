@@ -114,8 +114,7 @@ rosrun rikirobot riki_patrol_nav.py
    rosrun rikirobot riki_patrol_nav.py
    ```
 
-3. Type in the command you need in terminal.
-<<<<<<< HEAD
+4. Type in the command you need in terminal.
 
 
 
@@ -125,7 +124,4 @@ rosrun rikirobot riki_patrol_nav.py
 
 - riki_srvs folder: catkin_ws/src/rikirobot_project  (**Remember to catkin_make for the first time**)
 
-  
 
-=======
->>>>>>> 1eaa85ae8677f5d64344db795426ba1d70c9ccc3
